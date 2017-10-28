@@ -1,0 +1,35 @@
+AllCops:
+  Include:
+    - "Gemfile"
+    - "Guardfile"
+    - "Rakefile"
+    - "*.gemspec"
+  Exclude:
+    - "tmp/**/*"
+  TargetRubyVersion: 2.4
+
+Metrics/AbcSize:
+  Description: A calculated magnitude based on number of assignments, branches, and
+    conditions.
+  Max: 15
+  Exclude:
+    - "Rakefile"
+    - "spec/**/*_spec.rb"
+
+Metrics/BlockLength:
+  Description: Avoid long blocks with many lines.
+  Exclude:
+    - "Rakefile"
+    - "spec/**/*_spec.rb"
+
+Metrics/LineLength:
+  Max: 100
+
+Metrics/MethodLength:
+  Description: Avoid methods longer than 10 lines of code.
+  StyleGuide: https://github.com/bbatsov/ruby-style-guide#short-methods
+  CountComments: false
+  Max: 10
+  Exclude:
+    - "Rakefile"
+    - "spec/**/*_spec.rb"
