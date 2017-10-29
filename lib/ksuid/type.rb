@@ -9,23 +9,6 @@ module KSUID
   class Type
     include Comparable
 
-    def self.from_bytes(bytes)
-      bytes = bytes.bytes if bytes.is_a?(String)
-
-      timestamp = Utils.int_from_bytes(bytes.first(TIMESTAMP_BYTES))
-      payload = Utils.byte_string_from_array(bytes.last(PAYLOAD_BYTES))
-
-      new(payload: payload, time: Time.at(timestamp + EPOCH_TIME))
-    end
-
-    def self.from_base62(base62)
-      base62 = base62.rjust(STRING_LENGTH, Base62::CHARSET[0]) if base62.length < STRING_LENGTH
-      int = Base62.decode(base62)
-      bytes = Utils.int_to_bytes(int)
-
-      from_bytes(bytes)
-    end
-
     def initialize(payload: nil, time: Time.now)
       payload ||= SecureRandom.random_bytes(PAYLOAD_BYTES)
       byte_encoding = Utils.int_to_bytes(time.to_i - EPOCH_TIME)

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative 'ksuid/conversions'
 require_relative 'ksuid/type'
 require 'ksuid/version'
 
@@ -12,14 +13,10 @@ module KSUID
   STRING_LENGTH = 27
   MAX_STRING_ENCODED = 'aWgEPTl1tmebfsQzFP4bxwgy80V'
 
-  Max = Type.from_bytes([255] * BYTE_LENGTH)
+  extend KSUID::Conversions
 
-  def self.from_bytes(bytes)
-    Type.from_bytes(bytes)
-  end
-
-  def self.from_base62(base62)
-    Type.from_base62(base62)
+  def self.max
+    from_bytes([255] * BYTE_LENGTH)
   end
 
   def self.new(payload: nil, time: Time.now)

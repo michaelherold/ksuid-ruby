@@ -5,7 +5,7 @@ RSpec.describe KSUID::Type do
     it 'converts a base62 KSUID properly' do
       ksuid = KSUID.from_base62(KSUID::MAX_STRING_ENCODED)
 
-      expect(ksuid).to eq(KSUID::Max)
+      expect(ksuid).to eq(KSUID.max)
     end
   end
 
@@ -24,7 +24,7 @@ RSpec.describe KSUID::Type do
     it 'returns the payload as a byte string' do
       expected = ("\xFF" * 16).bytes
 
-      array = KSUID::Max.payload.bytes
+      array = KSUID.max.payload.bytes
 
       expect(array).to eq(expected)
     end
@@ -34,7 +34,7 @@ RSpec.describe KSUID::Type do
     it 'returns the ksuid as a byte string' do
       expected = ("\xFF" * 20).bytes
 
-      array = KSUID::Max.to_bytes.bytes
+      array = KSUID.max.to_bytes.bytes
 
       expect(array).to eq(expected)
     end
@@ -52,7 +52,7 @@ RSpec.describe KSUID::Type do
 
   describe '#to_s' do
     it 'correctly represents the maximum value' do
-      expect(KSUID::Max.to_s).to eq(KSUID::MAX_STRING_ENCODED)
+      expect(KSUID.max.to_s).to eq(KSUID::MAX_STRING_ENCODED)
     end
 
     it 'correctly represents zero' do
