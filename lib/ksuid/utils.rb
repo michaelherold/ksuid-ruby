@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Ksuid
+module KSUID
   # A set of helper functions.
   module Utils
     def self.byte_string_from_array(bytes)

@@ -4,7 +4,7 @@ require_relative 'ksuid/type'
 require 'ksuid/version'
 
 # The K-Sortable Unique IDentifier
-module Ksuid
+module KSUID
   EPOCH_TIME = 1_400_000_000
   PAYLOAD_BYTES = 16
   TIMESTAMP_BYTES = 4

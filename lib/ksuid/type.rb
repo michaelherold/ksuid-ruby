@@ -4,7 +4,7 @@ require 'securerandom'
 require_relative 'base62'
 require_relative 'utils'
 
-module Ksuid
+module KSUID
   # Encapsulates the data type for a ksuid.
   class Type
     include Comparable

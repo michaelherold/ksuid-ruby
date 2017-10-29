@@ -2,7 +2,7 @@
 
 require_relative 'utils'
 
-module Ksuid
+module KSUID
   # Converts between numbers and an alphanumeric encoding.
   module Base62
     CHARSET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'

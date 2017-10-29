@@ -4,7 +4,7 @@ require File.expand_path(File.join('..', 'lib', 'ksuid', 'version'), __FILE__)
 
 Gem::Specification.new do |spec|
   spec.name    = 'ksuid'
-  spec.version = Ksuid::VERSION
+  spec.version = KSUID::VERSION
   spec.authors = ['Michael Herold']
   spec.email   = ['michael@michaeljherold.com']
 
