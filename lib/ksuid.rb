@@ -2,7 +2,7 @@
 
 require_relative 'ksuid/conversions'
 require_relative 'ksuid/type'
-require 'ksuid/version'
+require_relative 'ksuid/version'
 
 # The K-Sortable Unique IDentifier
 module KSUID
