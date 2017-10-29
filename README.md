@@ -1,4 +1,4 @@
-# KSUID in Ruby
+# KSUID for Ruby
 
 [![Build Status](https://travis-ci.org/michaelherold/ksuid-ruby.svg)][travis]
 [![Test Coverage](https://api.codeclimate.com/v1/badges/94b2a2d4082bff21c10f/test_coverage)][test-coverage]
