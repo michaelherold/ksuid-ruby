@@ -1,11 +1,13 @@
 # KSUID in Ruby
 
 [![Build Status](https://travis-ci.org/michaelherold/ksuid-ruby.svg)][travis]
-[![Code Climate](https://codeclimate.com/github/michaelherold/ksuid-ruby/badges/gpa.svg)][codeclimate]
+[![Test Coverage](https://api.codeclimate.com/v1/badges/94b2a2d4082bff21c10f/test_coverage)][test-coverage]
+[![Maintainability](https://api.codeclimate.com/v1/badges/94b2a2d4082bff21c10f/maintainability)][maintainability]
 [![Inline docs](http://inch-ci.org/github/michaelherold/ksuid-ruby.svg?branch=master)][inch]
 
-[codeclimate]: https://codeclimate.com/github/michaelherold/ksuid-ruby
 [inch]: http://inch-ci.org/github/michaelherold/ksuid-ruby
+[maintainability]: https://codeclimate.com/github/michaelherold/ksuid-ruby/maintainability
+[test-coverage]: https://codeclimate.com/github/michaelherold/ksuid-ruby/test_coverage
 [travis]: https://travis-ci.org/michaelherold/ksuid-ruby
 
 ksuid is a Ruby library that can generate and parse [KSUIDs](https://github.com/segmentio/ksuid). The original readme for the Go version of KSUID does a great job of explaining what they are and how they should be used, so it is excerpted here.
