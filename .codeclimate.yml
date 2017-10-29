@@ -8,6 +8,7 @@ engines:
     enabled: true
   rubocop:
     enabled: true
+    channel: rubocop-0-50  # Needs bumped to 0.51 when it is released
 
 ratings:
   paths:

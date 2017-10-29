@@ -1,0 +1,10 @@
+---
+UncommunicativeModuleName:
+  exclude:
+    - "KSUID::Base62"
+
+UncommunicativeMethodName:
+  exclude:
+    - "KSUID::Conversions#self.from_base62"
+
+# vim: ft=yaml

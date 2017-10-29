@@ -7,16 +7,14 @@ require_relative 'ksuid/version'
 # The K-Sortable Unique IDentifier
 module KSUID
   EPOCH_TIME = 1_400_000_000
-  PAYLOAD_BYTES = 16
-  TIMESTAMP_BYTES = 4
-  BYTE_LENGTH = TIMESTAMP_BYTES + PAYLOAD_BYTES
+  BYTES = { payload: 16, timestamp: 4 }.tap { |bytes| bytes[:total] = bytes.values.sum }.freeze
   STRING_LENGTH = 27
   MAX_STRING_ENCODED = 'aWgEPTl1tmebfsQzFP4bxwgy80V'
 
   extend KSUID::Conversions
 
   def self.max
-    from_bytes([255] * BYTE_LENGTH)
+    from_bytes([255] * BYTES[:total])
   end
 
   def self.new(payload: nil, time: Time.now)

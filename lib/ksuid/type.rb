@@ -10,7 +10,7 @@ module KSUID
     include Comparable
 
     def initialize(payload: nil, time: Time.now)
-      payload ||= SecureRandom.random_bytes(PAYLOAD_BYTES)
+      payload ||= SecureRandom.random_bytes(BYTES[:payload])
       byte_encoding = Utils.int_to_bytes(time.to_i - EPOCH_TIME)
 
       @uid = byte_encoding.bytes + payload.bytes
@@ -25,7 +25,7 @@ module KSUID
     end
 
     def payload
-      Utils.byte_string_from_array(uid.last(PAYLOAD_BYTES))
+      Utils.byte_string_from_array(uid.last(BYTES[:payload]))
     end
 
     def to_bytes
@@ -33,7 +33,7 @@ module KSUID
     end
 
     def to_i
-      unix_time = Utils.int_from_bytes(uid.first(TIMESTAMP_BYTES))
+      unix_time = Utils.int_from_bytes(uid.first(BYTES[:timestamp]))
 
       unix_time + EPOCH_TIME
     end
