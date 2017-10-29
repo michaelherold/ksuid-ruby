@@ -8,9 +8,9 @@
 [inch]: http://inch-ci.org/github/michaelherold/ksuid-ruby
 [travis]: https://travis-ci.org/michaelherold/ksuid-ruby
 
-ksuid is a Ruby library that can generate and parse [KSUIDs][https://github.com/segmentio/ksuid]. The original readme for the Go version of KSUID does a great job of explaining what they are and how they should be used, so it is excerpted here.
+ksuid is a Ruby library that can generate and parse [KSUIDs](https://github.com/segmentio/ksuid). The original readme for the Go version of KSUID does a great job of explaining what they are and how they should be used, so it is excerpted here.
 
---
+---
 
 # What is a KSUID?
 
@@ -26,7 +26,7 @@ Unlike the more common choice of UUIDv4, KSUIDs contain a timestamp component th
 
 ## 2. No Coordination Required
 
-Snowflake IDs[1] and derivatives require coordination, which significantly increases the complexity of implementation and creates operations overhead. While RFC 4122 UUIDv1 does have a time component, there aren't enough bytes of randomness to provide strong protections against duplicate ID generation.
+[Snowflake IDs][1] and derivatives require coordination, which significantly increases the complexity of implementation and creates operations overhead. While RFC 4122 UUIDv1 does have a time component, there aren't enough bytes of randomness to provide strong protections against duplicate ID generation.
 
 KSUIDs use 128-bits of pseudorandom data, which provides a 64-times larger number space than the 122-bits in the well-accepted RFC 4122 UUIDv4 standard. The additional timestamp component drives down the extremely rare chance of duplication to the point of near physical infeasibility, even assuming extreme clock skew (> 24-hours) that would cause other severe anomalies.
 
