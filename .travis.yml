@@ -1,4 +1,29 @@
-sudo: false
 language: ruby
+
+cache: bundler
+sudo: false
+
+branches:
+  - master
+  - /^v\d+\.\d+(?:\.\d+)?(?:-\S*)?$/
+
+before_install:
+  - "gem update --system --no-doc --no-ri"
+  - "gem install bundler"
+
+bundler_args: "--without development --with ci"
+
 rvm:
-  - 2.4.2
+  - 2.3
+  - jruby-9.1
+  - ruby-head
+  - jruby-head
+
+matrix:
+  include:
+    - rvm: 2.4.2
+      after_script: "bundle exec codeclimate-test-reporter"
+
+  allow_failures:
+    - rvm: jruby-head
+    - rvm: ruby-head
