@@ -7,7 +7,9 @@ require_relative 'ksuid/version'
 # The K-Sortable Unique IDentifier
 module KSUID
   EPOCH_TIME = 1_400_000_000
-  BYTES = { payload: 16, timestamp: 4 }.tap { |bytes| bytes[:total] = bytes.values.sum }.freeze
+  BYTES = { payload: 16, timestamp: 4 }.tap do |bytes|
+    bytes[:total] = bytes.values.reduce(0, :+)
+  end.freeze
   STRING_LENGTH = 27
   MAX_STRING_ENCODED = 'aWgEPTl1tmebfsQzFP4bxwgy80V'
 
