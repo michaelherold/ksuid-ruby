@@ -7,6 +7,15 @@ module KSUID
       bytes.pack('C*')
     end
 
+    def self.bytes_to_hex_string(bytes)
+      bytes = bytes.bytes if bytes.is_a?(String)
+
+      byte_string_from_array(bytes)
+        .unpack('H*')
+        .first
+        .upcase
+    end
+
     def self.int_from_bytes(bytes)
       bytes = bytes.bytes if bytes.is_a?(String)
 
@@ -17,22 +26,14 @@ module KSUID
         .reduce(0, :+)
     end
 
-    def self.int_to_bytes(int)
-      words = int_to_word_array(int)
-
-      Array(words).pack('N*')
+    def self.int_to_bytes(int, bits = 32)
+      int
+        .to_s(2)
+        .rjust(bits, '0')
+        .split('')
+        .each_slice(8)
+        .map { |digits| digits.join.to_i(2) }
+        .pack("C#{bits / 8}")
     end
-
-    def self.int_to_word_array(int)
-      [].tap do |words|
-        loop do
-          int, remainder = int.divmod(2**32)
-          words << remainder
-
-          break unless int.positive?
-        end
-      end
-    end
-    private_class_method :int_to_word_array
   end
 end

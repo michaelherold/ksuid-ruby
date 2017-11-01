@@ -25,7 +25,11 @@ module KSUID
     end
 
     def payload
-      Utils.byte_string_from_array(uid.last(BYTES[:payload]))
+      Utils.bytes_to_hex_string(uid.last(BYTES[:payload]))
+    end
+
+    def raw
+      Utils.bytes_to_hex_string(uid)
     end
 
     def to_bytes
@@ -35,7 +39,7 @@ module KSUID
     def to_i
       unix_time = Utils.int_from_bytes(uid.first(BYTES[:timestamp]))
 
-      unix_time + EPOCH_TIME
+      unix_time
     end
 
     def to_s
@@ -43,7 +47,7 @@ module KSUID
     end
 
     def to_time
-      Time.at(to_i)
+      Time.at(to_i + EPOCH_TIME)
     end
 
     private

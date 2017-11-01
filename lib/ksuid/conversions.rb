@@ -22,7 +22,7 @@ module KSUID
     def self.from_base62(string)
       string = string.rjust(STRING_LENGTH, Base62::CHARSET[0]) if string.length < STRING_LENGTH
       int = Base62.decode(string)
-      bytes = Utils.int_to_bytes(int)
+      bytes = Utils.int_to_bytes(int, 160)
 
       from_bytes(bytes)
     end

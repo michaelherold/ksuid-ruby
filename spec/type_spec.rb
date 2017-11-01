@@ -11,8 +11,8 @@ RSpec.describe KSUID::Type do
 
   describe '#<=>' do
     it 'sorts the KSUIDs by timestamp' do
-      ksuid1 = KSUID.new(time: Time.at(123))
-      ksuid2 = KSUID.new(time: Time.at(234))
+      ksuid1 = KSUID.new(time: Time.now)
+      ksuid2 = KSUID.new(time: Time.now + 1)
 
       array = [ksuid2, ksuid1].sort
 
@@ -22,9 +22,9 @@ RSpec.describe KSUID::Type do
 
   describe '#payload' do
     it 'returns the payload as a byte string' do
-      expected = ("\xFF" * 16).bytes
+      expected = 'F' * 32
 
-      array = KSUID.max.payload.bytes
+      array = KSUID.max.payload
 
       expect(array).to eq(expected)
     end
