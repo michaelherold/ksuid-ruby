@@ -5,6 +5,6 @@ UncommunicativeModuleName:
 
 UncommunicativeMethodName:
   exclude:
-    - "KSUID::Conversions#self.from_base62"
+    - "KSUID#self.from_base62"
 
 # vim: ft=yaml
