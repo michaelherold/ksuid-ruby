@@ -26,6 +26,7 @@ group :ci do
   gem 'inch', require: false
   gem 'simplecov', require: false
   gem 'yard', '~> 0.8', require: false
+  gem 'yard-doctest', require: false
   gem 'yardstick', require: false
 end
 
