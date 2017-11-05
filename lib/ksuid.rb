@@ -3,13 +3,86 @@
 require_relative 'ksuid/type'
 require_relative 'ksuid/version'
 
-# The K-Sortable Unique IDentifier
+# The K-Sortable Unique IDentifier (KSUID)
+#
+# Distributed systems require unique identifiers to track events throughout
+# their subsystems. Many algorithms for generating unique identifiers, like the
+# {https://blog.twitter.com/2010/announcing-snowflake Snowflake ID} system,
+# require coordination with a central authority. This is an unacceptable
+# constraint in the face of systems that run on client devices, yet we still
+# need to be able to generate event identifiers and roughly sort them for
+# processing.
+#
+# The KSUID optimizes this problem into a roughly sortable identifier with
+# a high possibility space to reduce the chance of collision. KSUID uses
+# a 32-bit timestamp with second-level precision combined with 128 bytes of
+# random data for the "payload". The timestamp is based on the Unix epoch, but
+# with its base shifted forward from 1970-01-01 00:00:00 UTC to 2014-05-13
+# 16:532:20 UTC. This is to extend the useful life of the ID format to over
+# 100 years.
+#
+# Because KSUID timestamps use seconds as their unit of precision, they are
+# unsuitable to tasks that require extreme levels of precision. If you need
+# microsecond-level precision, a format like {https://github.com/alizain/ulid
+# ULID} may be more suitable for your use case.
+#
+# KSUIDs are "roughly sorted". Practically, this means that for any given event
+# stream, there may be some events that are ordered in a slightly different way
+# than they actually happened. There are two reasons for this. Firstly, the
+# format is precise to the second. This means that two events that are
+# generated in the same second will be sorted together, but the KSUID with the
+# smaller payload value will be sorted first. Secondly, the format is generated
+# on the client device using its clock, so KSUID is susceptible to clock shift
+# as well. The result of sorting the identifiers is that they will be sorted
+# into groups of identifiers that happened in the same second according to
+# their generating device.
+#
+# @example Generate a new KSUID
+#   KSUID.new
+#
+# @example Parse a KSUID string that you have received
+#   KSUID.from_base62('aWgEPTl1tmebfsQzFP4bxwgy80V')
+#
+# @example Parse a KSUID byte string that you have received
+#   KSUID.from_bytes(
+#     "\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF"
+#   )
+#
+# @example Parse a KSUID byte array that you have received
+#   KSUID.from_bytes(
+#     [255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+#      255, 255, 255, 255]
+#   )
 module KSUID
+  # The shift in the Unix epoch time between the standard and the KSUID base
+  #
+  # @return [Integer] the number of seconds by which we shift the epoch
   EPOCH_TIME = 1_400_000_000
+
+  # The number of bytes that are used to represent each part of a KSUID
+  #
+  # @return [Hash{Symbol => Integer}] the map of data type to number of bytes
   BYTES = { payload: 16, timestamp: 4, total: 20 }.freeze
+
+  # The number of characters in a base 62-encoded KSUID
+  #
+  # @return [Integer]
   STRING_LENGTH = 27
+
+  # The maximum KSUID as a base 62-encoded string.
+  #
+  # @return [String]
   MAX_STRING_ENCODED = 'aWgEPTl1tmebfsQzFP4bxwgy80V'
 
+  # Converts a base 62-encoded string into a KSUID
+  #
+  # @api public
+  #
+  # @example Parse a KSUID string into an object
+  #   KSUID.from_base62('0vdbMgWkU6slGpLVCqEFwkkZvuW')
+  #
+  # @param string [String] the base 62-encoded KSUID to convert into an object
+  # @return [KSUID::Type] the KSUID generated from the string
   def self.from_base62(string)
     string = string.rjust(STRING_LENGTH, Base62::CHARSET[0]) if string.length < STRING_LENGTH
     int = Base62.decode(string)
@@ -18,6 +91,15 @@ module KSUID
     from_bytes(bytes)
   end
 
+  # Converts a byte string or byte array into a KSUID
+  #
+  # @api public
+  #
+  # @example Parse a KSUID byte string into an object
+  #   KSUID.from_bytes("\x06\x83\xF7\x89\x04\x9C\xC2\x15\xC0\x99\xD4+xM\xBE\x994\e\xD7\x9C")
+  #
+  # @param bytes [String|Array<Integer>] the byte string or array to convert into an object
+  # @return [KSUID::Type] the KSUID generated from the bytes
   def self.from_bytes(bytes)
     bytes = bytes.bytes if bytes.is_a?(String)
 
@@ -27,10 +109,31 @@ module KSUID
     KSUID::Type.new(payload: payload, time: Time.at(timestamp + EPOCH_TIME))
   end
 
+  # Generates the maximum KSUID as a KSUID type
+  #
+  # @api semipublic
+  #
+  # @example Generate the maximum KSUID
+  #   KSUID.max
+  #
+  # @return [KSUID::Type] the maximum KSUID in both timestamp and payload
   def self.max
     from_bytes([255] * BYTES[:total])
   end
 
+  # Instantiates a new KSUID
+  #
+  # @api public
+  #
+  # @example Generate a new KSUID for the current second
+  #   KSUID.new
+  #
+  # @example Generate a new KSUID for a given timestamp
+  #   KSUID.new(time: Time.parse('2017-11-05 15:00:04 UTC'))
+  #
+  # @param payload [String|Array<Integer>|nil] the payload for the KSUID
+  # @param time [Time] the timestamp to use for the KSUID
+  # @return [KSUID::Type] the generated KSUID
   def self.new(payload: nil, time: Time.now)
     Type.new(payload: payload, time: time)
   end
