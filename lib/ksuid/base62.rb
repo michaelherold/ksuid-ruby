@@ -23,7 +23,7 @@ module KSUID
     end
 
     def self.encode(number)
-      chars = _encode(number)
+      chars = encode_without_padding(number)
 
       chars << padding if chars.empty?
       chars.reverse.join('').rjust(STRING_LENGTH, padding)
@@ -33,7 +33,13 @@ module KSUID
       encode(Utils.int_from_bytes(bytes))
     end
 
-    def self._encode(number)
+    # Encodes a number as a string while disregarding the expected width
+    #
+    # @api private
+    #
+    # @param number [Integer] the number to encode
+    # @return [String] the resulting encoded string
+    def self.encode_without_padding(number)
       [].tap do |chars|
         loop do
           break unless number.positive?
@@ -43,7 +49,7 @@ module KSUID
         end
       end
     end
-    private_class_method :_encode
+    private_class_method :encode_without_padding
 
     def self.padding
       CHARSET[0]
