@@ -43,7 +43,7 @@ module KSUID
     end
 
     def to_s
-      Base62.encode_bytes(to_bytes)
+      Base62.encode_bytes(uid)
     end
 
     def to_time

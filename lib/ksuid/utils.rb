@@ -19,11 +19,10 @@ module KSUID
     def self.int_from_bytes(bytes)
       bytes = bytes.bytes if bytes.is_a?(String)
 
-      byte_string_from_array(bytes)
-        .unpack('N*')
-        .each_with_index
-        .map { |byte, byte_number| byte << (32 * byte_number) }
-        .reduce(0, :+)
+      bytes
+        .map { |byte| byte.to_s(2).rjust(8, '0') }
+        .join('')
+        .to_i(2)
     end
 
     def self.int_to_bytes(int, bits = 32)
