@@ -1,8 +1,69 @@
 # frozen_string_literal: true
 
 require 'bundler/gem_tasks'
-require 'rspec/core/rake_task'
 
+# Defines a Rake task if the optional dependency is installed
+#
+# @return [nil]
+def with_optional_dependency
+  yield if block_given?
+rescue LoadError # rubocop:disable Lint/HandleExceptions
+end
+
+with_optional_dependency do
+  require 'inch/rake'
+  Inch::Rake::Suggest.new(:inch)
+end
+
+task :mutant do
+  command = [
+    'bundle exec mutant',
+    '--include lib',
+    '--require ksuid',
+    '--use rspec',
+    'KSUID*'
+  ].join(' ')
+
+  system command
+end
+
+require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new(:spec)
 
-task default: :spec
+require 'rubocop/rake_task'
+RuboCop::RakeTask.new(:rubocop)
+
+with_optional_dependency do
+  require 'yard/rake/yardoc_task'
+  YARD::Rake::YardocTask.new(:yard)
+end
+
+with_optional_dependency do
+  require 'yard-doctest'
+  task 'yard:doctest' do
+    command = 'yard doctest'
+    success = system(command)
+
+    abort "\nYard Doctest failed: #{$CHILD_STATUS}" unless success
+  end
+end
+
+with_optional_dependency do
+  require 'yardstick/rake/measurement'
+  options = YAML.load_file('.yardstick.yml')
+  Yardstick::Rake::Measurement.new(:yardstick_measure, options) do |measurement|
+    measurement.output = 'coverage/docs.txt'
+  end
+end
+
+with_optional_dependency do
+  require 'yardstick/rake/verify'
+  options = YAML.load_file('.yardstick.yml')
+  Yardstick::Rake::Verify.new(:yardstick_verify, options) do |verify|
+    verify.threshold = 100
+  end
+end
+
+task yardstick: %i[yardstick_measure yardstick_verify]
+
+task default: %i[spec yard:doctest rubocop yard inch]
