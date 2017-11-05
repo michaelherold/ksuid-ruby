@@ -12,8 +12,12 @@ group :development do
   gem 'guard-rspec'
   gem 'guard-rubocop'
   gem 'guard-yard'
+  gem 'inch'
   gem 'mutant-rspec'
   gem 'rubocop', '0.51.0'
+  gem 'yard', '~> 0.8'
+  gem 'yard-doctest'
+  gem 'yardstick'
 end
 
 group :development, :test do
@@ -23,11 +27,7 @@ end
 
 group :ci do
   gem 'codeclimate-test-reporter', require: false
-  gem 'inch', require: false
   gem 'simplecov', require: false
-  gem 'yard', '~> 0.8', require: false
-  gem 'yard-doctest', require: false
-  gem 'yardstick', require: false
 end
 
 group :test do
