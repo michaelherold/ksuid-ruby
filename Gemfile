@@ -7,6 +7,7 @@ git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 gemspec
 
 group :development do
+  gem 'benchmark-ips'
   gem 'guard-bundler'
   gem 'guard-inch'
   gem 'guard-rspec'
