@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'securerandom'
 require_relative 'base62'
 require_relative 'utils'
 
@@ -35,7 +34,7 @@ module KSUID
     # @param time [Time] the timestamp to use for the KSUID
     # @return [KSUID::Type] the generated KSUID
     def initialize(payload: nil, time: Time.now)
-      payload ||= SecureRandom.random_bytes(BYTES[:payload])
+      payload ||= KSUID.config.random_generator.call
       byte_encoding = Utils.int_to_bytes(time.to_i - EPOCH_TIME)
 
       @uid = byte_encoding.bytes + payload.bytes

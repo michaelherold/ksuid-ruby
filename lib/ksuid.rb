@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative 'ksuid/configuration'
 require_relative 'ksuid/type'
 require_relative 'ksuid/version'
 
@@ -73,6 +74,35 @@ module KSUID
   #
   # @return [String]
   MAX_STRING_ENCODED = 'aWgEPTl1tmebfsQzFP4bxwgy80V'
+
+  # The configuration for creating new KSUIDs
+  #
+  # @api private
+  #
+  # @return [KSUID::Configuration] the gem's configuration
+  def self.config
+    @config ||= KSUID::Configuration.new
+  end
+
+  # Configures the KSUID gem by passing a block
+  #
+  # @api public
+  #
+  # @example Override the random generator with a null data generator
+  #   KSUID.configure do |config|
+  #     config.random_generator = -> { "\x00" * KSUID::BYTES[:payload] }
+  #   end
+  #
+  # @example Override the random generator with the faster, but less secure, Random
+  #   KSUID.configure do |config|
+  #     config.random_generator = -> { Random.new.bytes(KSUID::BYTES[:payload]) }
+  #   end
+  #
+  # @return [KSUID::Configuration] the gem's configuration
+  def self.configure
+    yield config if block_given?
+    config
+  end
 
   # Converts a base 62-encoded string into a KSUID
   #
