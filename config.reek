@@ -1,4 +1,8 @@
 ---
+ManualDispatch:
+  exclude:
+    - "KSUID::Configuration#assert_generator_is_callable"
+
 UncommunicativeModuleName:
   exclude:
     - "KSUID::Base62"

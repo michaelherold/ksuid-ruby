@@ -92,6 +92,14 @@ If you need to generate a KSUID for a specific timestamp, use:
 ksuid = KSUID.new(time: time)  # where time is a Time-like object
 ```
 
+If you need to use a faster or more secure way of generating the random payloads (or if you want the payload to be non-random data), you can configure the gem for those use cases:
+
+```ruby
+KSUID.configure do |config|
+  config.random_generator = -> { Random.new.bytes(16) }
+end
+```
+
 ## Contributing
 
 So you’re interested in contributing to KSUID? Check out our [contributing guidelines](CONTRIBUTING.md) for more information on how to do that.
