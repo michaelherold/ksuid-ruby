@@ -18,4 +18,4 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - Parsing of bytes through `KSUID.from_bytes`.
 - Parsing of strings through `KSUID.from_base62`.
 
-[0.1.0]: https://github.com/michaelherold/interactor-contracts/tree/v0.1.0
+[0.1.0]: https://github.com/michaelherold/ksuid/tree/v0.1.0
