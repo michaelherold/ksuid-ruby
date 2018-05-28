@@ -30,7 +30,7 @@ module KSUID
     # @example Generate a new KSUID for a given timestamp
     #   KSUID::Type.new(time: Time.parse('2017-11-05 15:00:04 UTC'))
     #
-    # @param payload [String|Array<Integer>|nil] the payload for the KSUID
+    # @param payload [String, Array<Integer>, nil] the payload for the KSUID
     # @param time [Time] the timestamp to use for the KSUID
     # @return [KSUID::Type] the generated KSUID
     def initialize(payload: nil, time: Time.now)
