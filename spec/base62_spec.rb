@@ -1,6 +1,23 @@
 # frozen_string_literal: true
 
 RSpec.describe KSUID::Base62 do
+  describe '.compatible?' do
+    it 'recognizes base 62-encoded strings' do
+      expect(described_class.compatible?(KSUID.new.to_s)).to eq(true)
+    end
+
+    it 'does not recognize binary strings' do
+      expect(described_class.compatible?(KSUID.new.to_bytes)).to eq(false)
+    end
+
+    it 'does not recognize other things' do
+      expect(described_class.compatible?(1)).to eq(false)
+      expect(described_class.compatible?(nil)).to eq(false)
+      expect(described_class.compatible?([])).to eq(false)
+      expect(described_class.compatible?({})).to eq(false)
+    end
+  end
+
   describe '#decode' do
     it 'decodes base 62 numbers that may or may not be zero-padded' do
       %w[awesomesauce 00000000awesomesauce].each do |encoded|
