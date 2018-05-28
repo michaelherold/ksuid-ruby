@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Added
 
 - The ability to configure the random generator for the gem via `KSUID.configure`. This allows you to set up random generation to the specifications you need, whether that is for speed or for security.
+- A plugin for Sequel to support KSUID fields. You can include the plugin via `plugin :ksuid` within a `Sequel::Model` class.
 
 ### Changed
 

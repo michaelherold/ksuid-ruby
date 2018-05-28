@@ -3,6 +3,7 @@
 require_relative 'ksuid/configuration'
 require_relative 'ksuid/type'
 require_relative 'ksuid/version'
+require_relative 'sequel/plugins/ksuid' if defined?(Sequel)
 
 # The K-Sortable Unique IDentifier (KSUID)
 #
