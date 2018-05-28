@@ -71,7 +71,7 @@ module KSUID
     #      255, 255, 255, 255, 255, 255, 255, 255, 255, 255]
     #   )
     #
-    # @param bytes [String|Array<Integer>] the bytes to encode
+    # @param bytes [String, Array<Integer>] the bytes to encode
     # @return [String] the encoded bytes as a base 62 string
     def self.encode_bytes(bytes)
       encode(Utils.int_from_bytes(bytes))

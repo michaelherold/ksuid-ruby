@@ -128,7 +128,7 @@ module KSUID
   # @example Parse a KSUID byte string into an object
   #   KSUID.from_bytes("\x06\x83\xF7\x89\x04\x9C\xC2\x15\xC0\x99\xD4+xM\xBE\x994\e\xD7\x9C")
   #
-  # @param bytes [String|Array<Integer>] the byte string or array to convert into an object
+  # @param bytes [String, Array<Integer>] the byte string or array to convert into an object
   # @return [KSUID::Type] the KSUID generated from the bytes
   def self.from_bytes(bytes)
     bytes = bytes.bytes if bytes.is_a?(String)
@@ -161,7 +161,7 @@ module KSUID
   # @example Generate a new KSUID for a given timestamp
   #   KSUID.new(time: Time.parse('2017-11-05 15:00:04 UTC'))
   #
-  # @param payload [String|Array<Integer>|nil] the payload for the KSUID
+  # @param payload [String, Array<Integer>, nil] the payload for the KSUID
   # @param time [Time] the timestamp to use for the KSUID
   # @return [KSUID::Type] the generated KSUID
   def self.new(payload: nil, time: Time.now)

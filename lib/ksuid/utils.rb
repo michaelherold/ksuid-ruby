@@ -15,7 +15,7 @@ module KSUID
 
     # Converts a byte string or byte array into a hex-encoded string
     #
-    # @param bytes [String|Array<Integer>] the byte string or array
+    # @param bytes [String, Array<Integer>] the byte string or array
     # @return [String] the byte string as a hex-encoded string
     def self.bytes_to_hex_string(bytes)
       bytes = bytes.bytes if bytes.is_a?(String)
@@ -28,7 +28,7 @@ module KSUID
 
     # Converts a byte string or byte array into an integer
     #
-    # @param bytes [String|Array<Integer>] the byte string or array
+    # @param bytes [String, Array<Integer>] the byte string or array
     # @return [Integer] the resulting integer
     def self.int_from_bytes(bytes)
       bytes = bytes.bytes if bytes.is_a?(String)
