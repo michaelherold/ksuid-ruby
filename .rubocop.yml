@@ -33,3 +33,7 @@ Metrics/MethodLength:
   Exclude:
     - "Rakefile"
     - "spec/**/*_spec.rb"
+
+Naming/FileName:
+  Exclude:
+    - "Appraisals"
