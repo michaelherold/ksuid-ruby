@@ -16,7 +16,7 @@ group :development do
   gem 'inch'
   gem 'mutant-rspec'
   gem 'rubocop', '0.51.0'
-  gem 'yard', '~> 0.8'
+  gem 'yard', '~> 0.9'
   gem 'yard-doctest'
   gem 'yardstick'
 end
