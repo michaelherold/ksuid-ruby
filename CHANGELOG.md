@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 - The ability to configure the random generator for the gem via `KSUID.configure`. This allows you to set up random generation to the specifications you need, whether that is for speed or for security.
 
+### Changed
+
+- The `KSUID::Type#inspect` method now makes it much easier to see what you're looking at in the console when you're debugging.
+
 ## [0.1.0] - 2017-11-05
 
 ### Added

@@ -63,6 +63,18 @@ module KSUID
       other.to_s == to_s
     end
 
+    # Prints the KSUID for debugging within a console
+    #
+    # @api public
+    #
+    # @example Show the maximum KSUID
+    #   KSUID.max.inspect  #=> "<KSUID(aWgEPTl1tmebfsQzFP4bxwgy80V)>"
+    #
+    # @return [String]
+    def inspect
+      "<KSUID(#{self})>"
+    end
+
     # The payload for the KSUID, as a hex-encoded string
     #
     # This is generally useful for comparing against the Go tool

@@ -20,6 +20,14 @@ RSpec.describe KSUID::Type do
     end
   end
 
+  describe '#inspect' do
+    it 'shows the string representation for easy understanding' do
+      ksuid = KSUID.max
+
+      expect(ksuid.inspect).to match('aWgEPTl1tmebfsQzFP4bxwgy80V')
+    end
+  end
+
   describe '#payload' do
     it 'returns the payload as a byte string' do
       expected = 'F' * 32
