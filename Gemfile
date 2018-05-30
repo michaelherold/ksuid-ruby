@@ -32,5 +32,8 @@ group :ci do
 end
 
 group :test do
+  gem 'jdbc-sqlite3', platforms: %i[jruby]
   gem 'rspec', '~> 3.6'
+  gem 'sequel'
+  gem 'sqlite3', platforms: %i[mri mingw x64_mingw]
 end

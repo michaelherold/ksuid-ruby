@@ -100,6 +100,44 @@ KSUID.configure do |config|
 end
 ```
 
+### Using with Sequel
+
+When using Sequel, you can enable a plugin to turn a field into an auto-generated KSUID. Because Sequel favors being explicit, nearly everything about the plugin is opt-in. The only default behavior is as follows:
+
+1. The default column name is `ksuid`
+2. The field is automatically generated prior to validation
+
+There are two steps to use KSUIDs within Sequel. First, you will need to add a column to your model for the KSUID. By default, the plugin uses string serialization for its field, which looks like this:
+
+```ruby
+DB.create_table(:events) do
+  String :my_field_name
+end
+```
+
+If you wish to use a binary-serialized column, you can use the `blob` method:
+
+```ruby
+DB.create_table(:events) do
+  blob :ksuid
+end
+```
+
+To use the KSUID plugin, activate it within your model:
+
+```ruby
+class Event < Sequel::Model(:events)
+  plugin :ksuid
+end
+```
+
+During this activation, there are a few options you can choose to enable:
+
+* `binary: true` - If you prefer binary KSUIDs, you can switch from the default string serialization by specifying that you want it to be a binary field.
+* `field: <my_field_name>` - By default, the column is named `ksuid`. If you want to specify a different name, you can use the `field` option to name it what you like.
+* `force: true` - Typically, you will want to generate a KSUID when you're saving a record. If you want to ensure this happens, you can force the plugin to overwrite the field when doing the first save for a record. Note that the plugin will overwrite a manually set value in this mode.
+* `wrap: true` - By default, the plugin will return your KSUID in its string- (or binary-) serialized form instead of as the KSUID type. If you want to wrap the accessors for the field to make them use the KSUID type, you can tell the plugin to wrap the field.
+
 ## Contributing
 
 So you’re interested in contributing to KSUID? Check out our [contributing guidelines](CONTRIBUTING.md) for more information on how to do that.

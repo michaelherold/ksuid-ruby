@@ -3,6 +3,7 @@
 require_relative 'ksuid/configuration'
 require_relative 'ksuid/type'
 require_relative 'ksuid/version'
+require_relative 'sequel/plugins/ksuid' if defined?(Sequel)
 
 # The K-Sortable Unique IDentifier (KSUID)
 #
@@ -74,6 +75,28 @@ module KSUID
   #
   # @return [String]
   MAX_STRING_ENCODED = 'aWgEPTl1tmebfsQzFP4bxwgy80V'
+
+  # Converts a KSUID-compatible value into an actual KSUID
+  #
+  # @api public
+  #
+  # @example Converts a base 62 KSUID string into a KSUID
+  #   KSUID.call('15Ew2nYeRDscBipuJicYjl970D1')
+  #
+  # @param ksuid [String, Array<Integer>, KSUID::Type] the KSUID-compatible value
+  # @return [KSUID::Type] the converted KSUID
+  # @raise [ArgumentError] if the value is not KSUID-compatible
+  def self.call(ksuid)
+    return unless ksuid
+
+    case ksuid
+    when KSUID::Type then ksuid
+    when Array then KSUID.from_bytes(ksuid)
+    when String then cast_string(ksuid)
+    else
+      raise ArgumentError, "Cannot convert #{ksuid.inspect} to KSUID"
+    end
+  end
 
   # The configuration for creating new KSUIDs
   #
@@ -167,4 +190,19 @@ module KSUID
   def self.new(payload: nil, time: Time.now)
     Type.new(payload: payload, time: time)
   end
+
+  # Casts a string into a KSUID
+  #
+  # @api private
+  #
+  # @param ksuid [String] the string to convert into a KSUID
+  # @return [KSUID::Type] the converted KSUID
+  def self.cast_string(ksuid)
+    if Base62.compatible?(ksuid)
+      KSUID.from_base62(ksuid)
+    else
+      KSUID.from_bytes(ksuid)
+    end
+  end
+  private_class_method :cast_string
 end

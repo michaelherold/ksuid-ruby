@@ -2,6 +2,7 @@
 ManualDispatch:
   exclude:
     - "KSUID::Configuration#assert_generator_is_callable"
+    - "Sequel::Plugins::Ksuid::InstanceMethods#set_ksuid"
 
 UncommunicativeModuleName:
   exclude:
