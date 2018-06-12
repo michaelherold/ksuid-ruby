@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Added
 
 - The ability to configure the random generator for the gem via `KSUID.configure`. This allows you to set up random generation to the specifications you need, whether that is for speed or for security.
+- Support for ActiveRecord. You can now use `KSUID::ActiveRecord[:my_field]` to define a KSUID field using the Rails 5 Attributes API. There is also two new column types for migrations: `ksuid` and `ksuid_binary`. The first stores your KSUID as a string in the database, the latter as binary data.
 
 ### Changed
 

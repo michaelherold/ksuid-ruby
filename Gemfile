@@ -32,5 +32,6 @@ group :ci do
 end
 
 group :test do
+  gem 'appraisal'
   gem 'rspec', '~> 3.6'
 end

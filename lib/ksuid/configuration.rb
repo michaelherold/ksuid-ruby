@@ -16,13 +16,22 @@ module KSUID
     # Raised when the gem is misconfigured.
     ConfigurationError = Class.new(StandardError)
 
+    # The default generator for generating random payloads
+    #
+    # @api private
+    #
+    # @return [Proc]
+    def self.default_generator
+      -> { SecureRandom.random_bytes(BYTES[:payload]) }
+    end
+
     # Instantiates a new KSUID configuration
     #
     # @api private
     #
     # @return [KSUID::Configuration] the new configuration
     def initialize
-      self.random_generator = default_generator
+      self.random_generator = self.class.default_generator
     end
 
     # The method for generating random payloads in the gem
@@ -80,15 +89,6 @@ module KSUID
 
       raise ConfigurationError, 'Random generator generates the wrong number of bytes ' \
         "(#{length} generated, #{expected_length} expected)"
-    end
-
-    # The default generator for generating random payloads
-    #
-    # @api private
-    #
-    # @return [Proc]
-    def default_generator
-      -> { SecureRandom.random_bytes(BYTES[:payload]) }
     end
   end
 end

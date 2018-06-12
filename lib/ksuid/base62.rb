@@ -20,6 +20,19 @@ module KSUID
     # @api private
     BASE = CHARSET.size
 
+    # Checks whether a string is a base 62-compatible string
+    #
+    # @api public
+    #
+    # @example Checks a KSUID for base 62 compatibility
+    #   KSUID::Base62.compatible?("15Ew2nYeRDscBipuJicYjl970D1") #=> true
+    #
+    # @param string [String] the string to check for compatibility
+    # @return [Boolean]
+    def self.compatible?(string)
+      string.each_char.all? { |char| CHARSET.include?(char) }
+    end
+
     # Decodes a base 62-encoded string into an integer
     #
     # @api public
