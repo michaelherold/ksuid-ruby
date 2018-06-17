@@ -1,0 +1,6 @@
+ignore_subjects:
+  - "KSUID::ActiveRecord.[]"
+  - "KSUID::ActiveRecord.define_attribute"
+  - "KSUID::ActiveRecord.define_created_at"
+  - "KSUID::Backports*"
+  - "KSUID::Configuration.default_generator" # The mutatations here hide some context, which isn't helpful

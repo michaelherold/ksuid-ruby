@@ -15,6 +15,10 @@ end
 
 require 'ksuid'
 
+Dir[Pathname.new(File.expand_path('support', __dir__)) / '**' / '*.rb'].each do |support_file|
+  require support_file
+end
+
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
     expectations.syntax = :expect

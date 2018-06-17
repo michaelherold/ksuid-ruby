@@ -22,7 +22,7 @@ module KSUID
     #
     # @return [Proc]
     def self.default_generator
-      -> { SecureRandom.random_bytes(BYTES[:payload]) }
+      -> { SecureRandom.random_bytes(BYTES.fetch(:payload)) }
     end
 
     # Instantiates a new KSUID configuration
@@ -85,7 +85,7 @@ module KSUID
     # @raise [ConfigurationError] if the generator generates the wrong size payload
     # @return [nil]
     def assert_payload_size(generator)
-      return if (length = generator.call.length) == (expected_length = BYTES[:payload])
+      return if (length = generator.call.length).equal?(expected_length = BYTES.fetch(:payload))
 
       raise ConfigurationError, 'Random generator generates the wrong number of bytes ' \
         "(#{length} generated, #{expected_length} expected)"

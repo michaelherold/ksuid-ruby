@@ -70,8 +70,7 @@ module KSUID
     def self.encode(number)
       chars = encode_without_padding(number)
 
-      chars << padding if chars.empty?
-      chars.reverse.join('').rjust(STRING_LENGTH, padding)
+      chars.reverse.join.rjust(STRING_LENGTH, padding)
     end
 
     # Encodes a byte string or byte array into base 62

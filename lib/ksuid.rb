@@ -89,11 +89,11 @@ module KSUID
     return unless ksuid
 
     case ksuid
-    when KSUID::Type then ksuid
-    when Array then KSUID.from_bytes(ksuid)
+    when Type then ksuid
+    when Array then from_bytes(ksuid)
     when String then cast_string(ksuid)
     else
-      raise ArgumentError, "Cannot convert #{ksuid.inspect} to KSUID"
+      raise ArgumentError, "Cannot convert #{ksuid} to KSUID"
     end
   end
 
@@ -103,7 +103,7 @@ module KSUID
   #
   # @return [KSUID::Configuration] the gem's configuration
   def self.config
-    @config ||= KSUID::Configuration.new
+    @config ||= Configuration.new
   end
 
   # Configures the KSUID gem by passing a block
@@ -136,7 +136,6 @@ module KSUID
   # @param string [String] the base 62-encoded KSUID to convert into an object
   # @return [KSUID::Type] the KSUID generated from the string
   def self.from_base62(string)
-    string = string.rjust(STRING_LENGTH, Base62::CHARSET[0]) if string.length < STRING_LENGTH
     int = Base62.decode(string)
     bytes = Utils.int_to_bytes(int, 160)
 
@@ -155,10 +154,10 @@ module KSUID
   def self.from_bytes(bytes)
     bytes = bytes.bytes if bytes.is_a?(String)
 
-    timestamp = Utils.int_from_bytes(bytes.first(BYTES[:timestamp]))
-    payload = Utils.byte_string_from_array(bytes.last(BYTES[:payload]))
+    timestamp = Utils.int_from_bytes(bytes.first(BYTES.fetch(:timestamp)))
+    payload = Utils.byte_string_from_array(bytes.last(BYTES.fetch(:payload)))
 
-    KSUID::Type.new(payload: payload, time: Time.at(timestamp + EPOCH_TIME))
+    new(payload: payload, time: timestamp + EPOCH_TIME)
   end
 
   # Generates the maximum KSUID as a KSUID type
@@ -170,7 +169,7 @@ module KSUID
   #
   # @return [KSUID::Type] the maximum KSUID in both timestamp and payload
   def self.max
-    from_bytes([255] * BYTES[:total])
+    from_bytes([255] * BYTES.fetch(:total))
   end
 
   # Instantiates a new KSUID
@@ -198,9 +197,9 @@ module KSUID
   # @return [KSUID::Type] the converted KSUID
   def self.cast_string(ksuid)
     if Base62.compatible?(ksuid)
-      KSUID.from_base62(ksuid)
+      from_base62(ksuid)
     else
-      KSUID.from_bytes(ksuid)
+      from_bytes(ksuid)
     end
   end
   private_class_method :cast_string

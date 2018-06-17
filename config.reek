@@ -19,6 +19,7 @@ UncommunicativeModuleName:
 UncommunicativeMethodName:
   exclude:
     - "KSUID#self.from_base62"
+    - "KSUID::Backports#unpack1"
 
 UtilityFunction:
   exclude:

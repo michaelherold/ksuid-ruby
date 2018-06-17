@@ -14,7 +14,8 @@ group :development do
   gem 'guard-rubocop'
   gem 'guard-yard'
   gem 'inch'
-  gem 'mutant-rspec'
+  gem 'mutant', github: 'mbj/mutant', ref: '3eb55274aa151626eff53df14d1199f2d92b1952'
+  gem 'mutant-rspec', github: 'mbj/mutant', ref: '3eb55274aa151626eff53df14d1199f2d92b1952'
   gem 'rubocop', '0.51.0'
   gem 'yard', '~> 0.9'
   gem 'yard-doctest'
@@ -34,4 +35,5 @@ end
 group :test do
   gem 'appraisal'
   gem 'rspec', '~> 3.6'
+  gem 'timecop'
 end

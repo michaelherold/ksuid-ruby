@@ -35,7 +35,7 @@ module KSUID
     # @return [KSUID::Type] the generated KSUID
     def initialize(payload: nil, time: Time.now)
       payload ||= KSUID.config.random_generator.call
-      byte_encoding = Utils.int_to_bytes(time.to_i - EPOCH_TIME)
+      byte_encoding = Utils.int_to_bytes(Integer(time) - EPOCH_TIME)
 
       @uid = byte_encoding.bytes + payload.bytes
     end
@@ -60,7 +60,7 @@ module KSUID
     # @param other [KSUID::Type] the other KSUID to check against
     # @return [Boolean]
     def ==(other)
-      other.to_s == to_s
+      to_s.eql?(other.to_s)
     end
 
     # Prints the KSUID for debugging within a console
@@ -88,7 +88,7 @@ module KSUID
     #
     # @return [String] a hex-encoded string
     def payload
-      Utils.bytes_to_hex_string(uid.last(BYTES[:payload]))
+      Utils.bytes_to_hex_string(uid.last(BYTES.fetch(:payload)))
     end
 
     # The KSUID as a hex-encoded string
@@ -132,9 +132,7 @@ module KSUID
     #
     # @return [Integer] the Unix timestamp for the event (without the epoch shift)
     def to_i
-      unix_time = Utils.int_from_bytes(uid.first(BYTES[:timestamp]))
-
-      unix_time
+      Utils.int_from_bytes(uid.first(BYTES.fetch(:timestamp)))
     end
 
     # The KSUID as a base 62-encoded string

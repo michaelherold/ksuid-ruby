@@ -36,9 +36,7 @@ module KSUID
       # @param value [String, nil] the database-serialized KSUID to convert
       # @return [KSUID::Type] the deserialized KSUID
       def deserialize(value)
-        return unless value
-
-        value = value.to_s if value.is_a?(::ActiveRecord::Type::Binary::Data)
+        value = value.to_str if value.is_a?(Data)
         KSUID.call(value)
       end
 

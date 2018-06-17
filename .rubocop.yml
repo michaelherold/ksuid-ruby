@@ -37,3 +37,7 @@ Metrics/MethodLength:
 Naming/FileName:
   Exclude:
     - "Appraisals"
+
+# We support older Rubies than 2.4. We can re-enable when we drop support for Ruby 2.3.
+Style/UnpackFirst:
+  Enabled: false

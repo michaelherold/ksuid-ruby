@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
+require_relative 'backports'
+
 module KSUID
   # Utility functions for converting between different encodings
   #
   # @api private
   module Utils
+    using Backports
+
     # Converts a byte string into a byte array
     #
     # @param bytes [String] a byte string
@@ -21,8 +25,7 @@ module KSUID
       bytes = bytes.bytes if bytes.is_a?(String)
 
       byte_string_from_array(bytes)
-        .unpack('H*')
-        .first
+        .unpack1('H*')
         .upcase
     end
 
@@ -35,7 +38,7 @@ module KSUID
 
       bytes
         .map { |byte| byte.to_s(2).rjust(8, '0') }
-        .join('')
+        .join
         .to_i(2)
     end
 
@@ -47,7 +50,7 @@ module KSUID
     def self.int_to_bytes(int, bits = 32)
       int
         .to_s(2)
-        .rjust(bits, '0')
+        .rjust(bits)
         .split('')
         .each_slice(8)
         .map { |digits| digits.join.to_i(2) }

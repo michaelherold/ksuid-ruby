@@ -48,16 +48,25 @@ with_optional_dependency do
   default << 'inch'
 end
 
-task :mutant do
+task :mutant, %i[matcher] do |_task, args|
+  args.with_defaults(matcher: 'KSUID*')
+
   command = [
+    'MUTANT=1',
     'bundle exec mutant',
     '--include lib',
     '--require ksuid',
-    '--use rspec',
-    'KSUID*'
-  ].join(' ')
+    '--use rspec'
+  ]
 
-  system command
+  config = YAML.safe_load(File.read('.mutant.yml'))
+  config['ignore_subjects'].each do |subject|
+    command << "--ignore-subject #{subject}"
+  end
+
+  command << args[:matcher]
+
+  system command.join(' ')
 end
 
 with_optional_dependency do
