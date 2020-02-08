@@ -24,6 +24,8 @@ end
 group :development, :test do
   gem 'pry'
   gem 'rake', '< 11'
+  gem 'rails'
+  gem 'sqlite3'
 end
 
 group :ci do
