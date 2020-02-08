@@ -160,7 +160,27 @@ You can also use a KSUID as the primary key on a table, much like you can use a 
 class CreateEvents < ActiveRecord::Migration[5.2]
   create_table :events, id: false do |table|
     table.ksuid :id, primary_key: true
+    table.timestamps
   end
+end
+```
+
+Alternatively it's possible to specify `id: :ksuid` directly.
+
+```ruby
+class CreateEvents < ActiveRecord::Migration[5.2]
+  create_table :events, id: :ksuid do |table|
+    table.timestamps
+  end
+end
+```
+
+To automatically use KSUID as primary key, create the following initializer:
+
+```ruby
+# config/initializers/ksuid.rb
+Rails.application.config.generators do |g|
+  g.orm :active_record, primary_key_type: :ksuid
 end
 ```
 
