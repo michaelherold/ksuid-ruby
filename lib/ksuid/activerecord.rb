@@ -9,8 +9,12 @@ module KSUID
     extend ActiveSupport::Concern
 
     class_methods do
-      def act_as_ksuid(field = :id)
-        self.send(:attribute, field.to_sym, :ksuid, default: -> { KSUID.new })
+      def act_as_ksuid(field = :id, opts = {})
+        if opts[:binary]
+          self.send(:attribute, field.to_sym, :ksuid_binary, default: -> { KSUID.new })
+        else
+          self.send(:attribute, field.to_sym, :ksuid, default: -> { KSUID.new })
+        end
 
         self.instance_eval do
           define_method "#{field.to_s}_created_at" do
