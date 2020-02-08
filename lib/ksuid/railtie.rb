@@ -5,10 +5,11 @@ module KSUID
   #
   # @api private
   class Railtie < ::Rails::Railtie
-    initializer 'ksuid' do
+    initializer "ksuid" do
       ActiveSupport.on_load :active_record do
-        require 'ksuid/activerecord'
-        require 'ksuid/activerecord/table_definition'
+        require "ksuid/activerecord"
+        require "ksuid/activerecord/table_definition"
+        require "ksuid/activerecord/schema_statements"
       end
     end
   end
