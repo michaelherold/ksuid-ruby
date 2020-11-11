@@ -18,6 +18,7 @@ gemfile:
   - gemfiles/rails_5.1.gemfile
   - gemfiles/rails_5.2.gemfile
   - gemfiles/rails_6.0.gemfile
+  - gemfiles/rails_6.1.gemfile
 
 rvm:
   - 2.5
@@ -31,6 +32,9 @@ matrix:
     # This one runs separately to send data to CodeClimate
     - rvm: 2.6
       gemfile: gemfiles/rails_5.2.gemfile
+
+    - rvm: jruby-9.2.13.0
+      gemfile: gemfiles/rails_6.1.gemfile
 
   include:
     - rvm: 2.6

@@ -23,3 +23,10 @@ appraise 'rails-6.0' do
   gem 'rails', '~> 6.0.0'
   gem 'sqlite3', '~> 1.4', platforms: %i[mri mingw x64_mingw]
 end
+
+unless RUBY_ENGINE == 'jruby'
+  appraise 'rails-6.1' do
+    gem 'rails', '~> 6.1.0.rc1'
+    gem 'sqlite3', '~> 1.4', platforms: %i[mri mingw x64_mingw]
+  end
+end
