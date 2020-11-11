@@ -13,7 +13,13 @@ appraise 'rails-5.1' do
 end
 
 appraise 'rails-5.2' do
-  gem 'activerecord-jdbcsqlite3-adapter', platforms: %i[jruby]
+  gem 'activerecord-jdbcsqlite3-adapter', '~> 52', platforms: %i[jruby]
   gem 'rails', '~> 5.2.0'
   gem 'sqlite3', '~> 1.3', '>= 1.3.6', platforms: %i[mri mingw x64_mingw]
+end
+
+appraise 'rails-6.0' do
+  gem 'activerecord-jdbcsqlite3-adapter', '~> 60', platforms: %i[jruby]
+  gem 'rails', '~> 6.0.0'
+  gem 'sqlite3', '~> 1.4', platforms: %i[mri mingw x64_mingw]
 end
