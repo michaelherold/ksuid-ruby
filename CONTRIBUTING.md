@@ -28,14 +28,13 @@ Ideally, a bug report should include a pull request with failing specs.
 1. [Fork the repository].
 2. [Create a topic branch].
 3. Add specs for your unimplemented feature or bug fix.
-4. Run `bundle exec rake spec`. If your specs pass, return to step 3.
+4. Run `appraisal rake spec`. If your specs pass, return to step 3.
 5. Implement your feature or bug fix.
-6. Run `bundle exec rake`. If your specs or any of the linters fail, return to step 5.
+6. Run `appraisal rake`. If your specs or any of the linters fail, return to step 5.
 7. Open `coverage/index.html`. If your changes are not completely covered by your tests, return to step 3.
 8. Add documentation for your feature or bug fix.
-9. Run `bundle exec inch`. If your changes are below a B in documentation, go back to step 8.
-10. Commit and push your changes.
-11. [Submit a pull request].
+9. Commit and push your changes.
+10. [Submit a pull request].
 
 [Create a topic branch]: https://help.github.com/articles/creating-and-deleting-branches-within-your-repository/
 [Fork the repository]: http://learn.github.com/p/branching.html
