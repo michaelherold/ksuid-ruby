@@ -22,6 +22,7 @@ rvm:
   - 2.3
   - 2.4
   - 2.5
+  - 2.6
   - jruby-9.1.13.0
   - jruby-9.2.0.0
   - ruby-head
@@ -30,7 +31,7 @@ rvm:
 matrix:
   exclude:
     # This one runs separately to send data to CodeClimate
-    - rvm: 2.5
+    - rvm: 2.6
       gemfile: gemfiles/rails_5.2.gemfile
 
     # It appears that activerecord-jdbc-adapter isn't compatible with 5.2 yet
@@ -40,7 +41,7 @@ matrix:
       gemfile: gemfiles/rails_5.2.gemfile
 
   include:
-    - rvm: 2.5
+    - rvm: 2.6
       gemfile: gemfiles/rails_5.2.gemfile
       after_script: "bundle exec codeclimate-test-reporter"
 
