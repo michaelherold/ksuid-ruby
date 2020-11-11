@@ -19,11 +19,11 @@ group :development do
   gem "yard", "~> 0.9"
   gem "yard-doctest"
   gem "yardstick"
-end
 
-group :development, :test do
-  gem "pry"
-  gem "rake", "< 11"
+  group :test do
+    gem "pry"
+    gem "rake"
+  end
 end
 
 group :ci do
