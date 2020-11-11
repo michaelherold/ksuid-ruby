@@ -132,9 +132,7 @@ module KSUID
     #
     # @return [Integer] the Unix timestamp for the event (without the epoch shift)
     def to_i
-      unix_time = Utils.int_from_bytes(uid.first(BYTES[:timestamp]))
-
-      unix_time
+      Utils.int_from_bytes(uid.first(BYTES[:timestamp]))
     end
 
     # The KSUID as a base 62-encoded string

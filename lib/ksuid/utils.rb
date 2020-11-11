@@ -21,8 +21,7 @@ module KSUID
       bytes = bytes.bytes if bytes.is_a?(String)
 
       byte_string_from_array(bytes)
-        .unpack('H*')
-        .first
+        .unpack1('H*')
         .upcase
     end
 
