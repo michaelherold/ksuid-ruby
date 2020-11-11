@@ -1,21 +1,23 @@
 # frozen-string-literal: true
 
-appraise 'rails-5.0' do
-  gem 'activerecord-jdbcsqlite3-adapter', '~> 50', platforms: %i[jruby]
-  gem 'rails', '~> 5.0.0'
-  gem 'sqlite3', '~> 1.3.6', platforms: %i[mri mingw x64_mingw]
-end
+if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('2.7.0')
+  appraise 'rails-5.0' do
+    gem 'activerecord-jdbcsqlite3-adapter', '~> 50', platforms: %i[jruby]
+    gem 'rails', '~> 5.0.0'
+    gem 'sqlite3', '~> 1.3.6', platforms: %i[mri mingw x64_mingw]
+  end
 
-appraise 'rails-5.1' do
-  gem 'activerecord-jdbcsqlite3-adapter', '~> 51', platforms: %i[jruby]
-  gem 'rails', '~> 5.1.0'
-  gem 'sqlite3', '~> 1.3', '>= 1.3.6', platforms: %i[mri mingw x64_mingw]
-end
+  appraise 'rails-5.1' do
+    gem 'activerecord-jdbcsqlite3-adapter', '~> 51', platforms: %i[jruby]
+    gem 'rails', '~> 5.1.0'
+    gem 'sqlite3', '~> 1.3', '>= 1.3.6', platforms: %i[mri mingw x64_mingw]
+  end
 
-appraise 'rails-5.2' do
-  gem 'activerecord-jdbcsqlite3-adapter', '~> 52', platforms: %i[jruby]
-  gem 'rails', '~> 5.2.0'
-  gem 'sqlite3', '~> 1.3', '>= 1.3.6', platforms: %i[mri mingw x64_mingw]
+  appraise 'rails-5.2' do
+    gem 'activerecord-jdbcsqlite3-adapter', '~> 52', platforms: %i[jruby]
+    gem 'rails', '~> 5.2.0'
+    gem 'sqlite3', '~> 1.3', '>= 1.3.6', platforms: %i[mri mingw x64_mingw]
+  end
 end
 
 appraise 'rails-6.0' do
