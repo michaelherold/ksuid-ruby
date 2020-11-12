@@ -21,19 +21,12 @@ group :development do
   gem "yardstick"
 
   group :test do
+    gem "appraisal"
     gem "pry"
     gem "rake"
+    gem "rspec", "~> 3.6"
+    gem "simplecov", require: false
   end
-end
-
-group :ci do
-  gem "codeclimate-test-reporter", require: false
-  gem "simplecov", require: false
-end
-
-group :test do
-  gem "appraisal"
-  gem "rspec", "~> 3.6"
 end
 
 gemspec path: "../"
