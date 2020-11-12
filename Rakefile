@@ -81,5 +81,6 @@ if !ENV['APPRAISAL_INITIALIZED'] && !ENV['CI']
   Appraisal::Task.new
   task default: :appraisal
 else
+  ENV['COVERAGE'] = '1'
   task default: default
 end

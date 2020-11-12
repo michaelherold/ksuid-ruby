@@ -8,7 +8,7 @@ branches:
   - /^v\d+\.\d+(?:\.\d+)?(?:-\S*)?$/
 
 before_install:
-  - "gem update --system --no-doc --no-ri"
+  - "gem update --system --no-doc"
   - "gem install bundler"
 
 bundler_args: "--without development --with ci"
