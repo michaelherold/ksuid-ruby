@@ -7,7 +7,7 @@ require 'bundler/gem_tasks'
 # @return [nil]
 def with_optional_dependency
   yield if block_given?
-rescue LoadError # rubocop:disable Lint/HandleExceptions
+rescue LoadError # rubocop:disable Lint/SuppressedException
 end
 
 require 'rspec/core/rake_task'

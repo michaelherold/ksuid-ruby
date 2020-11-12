@@ -24,7 +24,7 @@ module KSUID
       # @param options [Hash] see {ActiveRecord::ConnectionAdapters::TableDefinition}
       # @return [void]
       def ksuid(*args, **options)
-        args.each { |name| column(name, :string, options.merge(limit: 27)) }
+        args.each { |name| column(name, :string, **options.merge(limit: 27)) }
       end
 
       # Defines a field as a binary-based KSUID
@@ -47,7 +47,7 @@ module KSUID
       # @param options [Hash] see {ActiveRecord::ConnectionAdapters::TableDefinition}
       # @return [void]
       def ksuid_binary(*args, **options)
-        args.each { |name| column(name, :binary, options.merge(limit: 20)) }
+        args.each { |name| column(name, :binary, **options.merge(limit: 20)) }
       end
     end
   end
