@@ -40,5 +40,5 @@ jobs:
           bundle config path vendor/bundle
           bundle check || bundle install --jobs 4 --retry 3
           ./cc-test-reporter before-build
-          bundle exec rake spec
+          bundle exec rake spec yard:doctest
           ./cc-test-reporter after-build --exit-code $?
