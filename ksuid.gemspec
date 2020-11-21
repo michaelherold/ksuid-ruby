@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.name    = 'ksuid'
   spec.version = KSUID::VERSION
   spec.authors = ['Michael Herold']
-  spec.email   = ['michael@michaeljherold.com']
+  spec.email   = ['opensource@michaeljherold.com']
 
   spec.summary     = 'Ruby implementation of the K-Sortable Unique IDentifier'
   spec.description = spec.summary
