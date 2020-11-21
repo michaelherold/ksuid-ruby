@@ -70,13 +70,4 @@ with_optional_dependency do
   task yardstick: %i[yardstick_measure yardstick_verify]
 end
 
-if ENV['CI']
-  task default: default
-elsif !ENV['APPRAISAL_INITIALIZED']
-  require 'appraisal/task'
-  Appraisal::Task.new
-  task default: default - %w[spec yard:doctest] + %w[appraisal]
-else
-  ENV['COVERAGE'] = '1'
-  task default: default & %w[spec yard:doctest]
-end
+task default: default
