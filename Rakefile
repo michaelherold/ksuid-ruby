@@ -76,11 +76,4 @@ with_optional_dependency do
   task yardstick: %i[yardstick_measure yardstick_verify]
 end
 
-if !ENV['APPRAISAL_INITIALIZED'] && !ENV['CI']
-  require 'appraisal/task'
-  Appraisal::Task.new
-  task default: :appraisal
-else
-  ENV['COVERAGE'] = '1'
-  task default: default
-end
+task default: default

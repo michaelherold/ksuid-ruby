@@ -1,6 +1,7 @@
 --no-private
 --protected
 --markup markdown
+--plugin yard-doctest
 -
 CHANGELOG.md
 CODE_OF_CONDUCT.md
