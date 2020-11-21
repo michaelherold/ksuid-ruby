@@ -25,6 +25,6 @@ group :development do
     gem 'pry'
     gem 'rake'
     gem 'rspec', '~> 3.6'
-    gem 'simplecov', require: false
+    gem 'simplecov', '< 0.18', require: false
   end
 end
