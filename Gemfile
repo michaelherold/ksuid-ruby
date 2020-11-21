@@ -13,11 +13,8 @@ group :development do
   gem 'guard-rspec'
   gem 'guard-rubocop'
   gem 'guard-yard'
-  gem 'inch'
   gem 'mutant-rspec'
-  gem 'rubocop', '0.92.0'
   gem 'yard', '~> 0.9'
-  gem 'yard-doctest'
   gem 'yardstick'
 
   group :test do
@@ -25,6 +22,15 @@ group :development do
     gem 'pry'
     gem 'rake'
     gem 'rspec', '~> 3.6'
-    gem 'simplecov', require: false
+    gem 'simplecov', '< 0.18', require: false
+
+    group :linting do
+      gem 'yard-doctest'
+    end
+  end
+
+  group :linting do
+    gem 'inch'
+    gem 'rubocop', '0.92.0'
   end
 end
