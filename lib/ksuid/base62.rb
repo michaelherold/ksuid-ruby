@@ -20,6 +20,11 @@ module KSUID
     # @api private
     BASE = CHARSET.size
 
+    # A matcher that checks whether a String has a character outside the charset
+    #
+    # @api private
+    MATCHER = /[^#{CHARSET}]/.freeze
+
     # Checks whether a string is a base 62-compatible string
     #
     # @api public
@@ -30,7 +35,7 @@ module KSUID
     # @param string [String] the string to check for compatibility
     # @return [Boolean]
     def self.compatible?(string)
-      string.each_char.all? { |char| CHARSET.include?(char) }
+      string.each_char.all? { |char| !MATCHER.match?(char) }
     end
 
     # Decodes a base 62-encoded string into an integer
