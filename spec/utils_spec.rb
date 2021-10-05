@@ -9,6 +9,17 @@ RSpec.describe KSUID::Utils do
     expect(converted_number).to eq(number)
   end
 
+  describe '#byte_string_from_hex' do
+    it 'converts a hex string to an integer' do
+      hex = '0DE978D96CA064CB84C244311C261F49DB083AA8'
+
+      result = KSUID::Utils.byte_string_from_hex(hex)
+
+      expect(KSUID::Utils.bytes_to_hex_string(result)).to eq hex
+      expect(KSUID.call(result)).to eq KSUID.call('1z4PxXDcFiwInVMCTC3MvcbGptw')
+    end
+  end
+
   describe '#int_from_bytes' do
     it 'converts a byte string to an integer' do
       number_from_binary = ('1' * 32).to_i(2)

@@ -5,12 +5,32 @@ module KSUID
   #
   # @api private
   module Utils
+    # A regular expression for splitting a String into pairs of characters
+    #
+    # @return [Regexp] the splitter
+    PAIRS = /.{2}/.freeze
+
     # Converts a byte string into a byte array
     #
     # @param bytes [String] a byte string
     # @return [Array<Integer>] an array of bytes from the byte string
     def self.byte_string_from_array(bytes)
       bytes.pack('C*')
+    end
+
+    # Converts a hex string into a byte string
+    #
+    # @param hex [String] a hex-encoded KSUID
+    # @param bits [Integer] the expected number of bits for the result
+    # @return [String] the byte string
+    def self.byte_string_from_hex(hex, bits = 32)
+      byte_array =
+        hex
+        .rjust(bits, '0')
+        .scan(PAIRS)
+        .map { |bytes| bytes.to_i(16) }
+
+      byte_string_from_array(byte_array)
     end
 
     # Converts a byte string or byte array into a hex-encoded string
