@@ -17,7 +17,7 @@ module KSUID
     # @return [Regexp] the splitter
     PAIRS = /.{2}/.freeze
 
-    # Converts a byte string into a byte array
+    # Converts a byte array into a byte string
     #
     # @param bytes [String] a byte string
     # @return [Array<Integer>] an array of bytes from the byte string
