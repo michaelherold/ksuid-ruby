@@ -13,6 +13,7 @@ module KSUID
 
     # A regular expression for splitting a String into pairs of characters
     #
+    # @api private
     # @return [Regexp] the splitter
     PAIRS = /.{2}/.freeze
 
