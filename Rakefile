@@ -18,8 +18,14 @@ default = %w[spec]
 with_optional_dependency do
   require 'yard-doctest'
   task 'yard:doctest' do
-    command = 'yard doctest'
-    success = system(command)
+    command = String.new('yard doctest')
+    env = {}
+    if (gemfile = ENV['BUNDLE_GEMFILE'])
+      env['BUNDLE_GEMFILE'] = gemfile
+    elsif !ENV['APPRAISAL_INITIALIZED']
+      command.prepend('appraisal rails-6.0 ')
+    end
+    success = system(env, command)
 
     abort "\nYard Doctest failed: #{$CHILD_STATUS}" unless success
   end
@@ -48,18 +54,6 @@ with_optional_dependency do
   default << 'inch'
 end
 
-task :mutant do
-  command = [
-    'bundle exec mutant',
-    '--include lib',
-    '--require ksuid',
-    '--use rspec',
-    'KSUID*'
-  ].join(' ')
-
-  system command
-end
-
 with_optional_dependency do
   require 'yardstick/rake/measurement'
   options = YAML.load_file('.yardstick.yml')
@@ -76,11 +70,13 @@ with_optional_dependency do
   task yardstick: %i[yardstick_measure yardstick_verify]
 end
 
-if !ENV['APPRAISAL_INITIALIZED'] && !ENV['CI']
+if ENV['CI']
+  task default: default
+elsif !ENV['APPRAISAL_INITIALIZED']
   require 'appraisal/task'
   Appraisal::Task.new
-  task default: :appraisal
+  task default: default - %w[spec yard:doctest] + %w[appraisal]
 else
   ENV['COVERAGE'] = '1'
-  task default: default
+  task default: default & %w[spec yard:doctest]
 end

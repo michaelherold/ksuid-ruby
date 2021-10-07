@@ -13,7 +13,6 @@ group :development do
   gem 'guard-rspec'
   gem 'guard-rubocop'
   gem 'guard-yard'
-  gem 'mutant-rspec'
   gem 'yard', '~> 0.9'
   gem 'yardstick'
 
