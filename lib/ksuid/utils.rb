@@ -5,6 +5,12 @@ module KSUID
   #
   # @api private
   module Utils
+    # A regular expression for splitting bytes out of a "binary" string
+    #
+    # @api private
+    # @return [Regexp] the splitter
+    BYTES = /.{8}/.freeze
+
     # A regular expression for splitting a String into pairs of characters
     #
     # @return [Regexp] the splitter
@@ -67,9 +73,8 @@ module KSUID
       int
         .to_s(2)
         .rjust(bits, '0')
-        .split('')
-        .each_slice(8)
-        .map { |digits| digits.join.to_i(2) }
+        .scan(BYTES)
+        .map { |digits| digits.to_i(2) }
         .pack("C#{bits / 8}")
     end
   end
