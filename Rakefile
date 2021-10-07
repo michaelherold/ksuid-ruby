@@ -54,18 +54,6 @@ with_optional_dependency do
   default << 'inch'
 end
 
-task :mutant do
-  command = [
-    'bundle exec mutant',
-    '--include lib',
-    '--require ksuid',
-    '--use rspec',
-    'KSUID*'
-  ].join(' ')
-
-  system command
-end
-
 with_optional_dependency do
   require 'yardstick/rake/measurement'
   options = YAML.load_file('.yardstick.yml')
