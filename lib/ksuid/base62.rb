@@ -15,15 +15,15 @@ module KSUID
     # @api private
     CHARSET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
 
+    # A Set of all base 62 characters used for optimized lookup
+    #
+    # @api private
+    CHARSET_SET = CHARSET.split.to_set
+
     # The base (62) that this module encodes numbers into
     #
     # @api private
     BASE = CHARSET.size
-
-    # A matcher that checks whether a String has a character outside the charset
-    #
-    # @api private
-    MATCHER = /[^#{CHARSET}]/.freeze
 
     # Checks whether a string is a base 62-compatible string
     #
@@ -35,7 +35,7 @@ module KSUID
     # @param string [String] the string to check for compatibility
     # @return [Boolean]
     def self.compatible?(string)
-      string.each_char.all? { |char| !MATCHER.match?(char) }
+      string.each_char.all? { |c| CHARSET_SET.include?(c) }
     end
 
     # Decodes a base 62-encoded string into an integer

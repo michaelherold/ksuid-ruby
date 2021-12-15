@@ -4,9 +4,11 @@
 # only characters from the KSUID Base62 charset.
 
 require 'benchmark/ips'
+require 'set'
 
 EXAMPLE = '15Ew2nYeRDscBipuJicYjl970D1'
 CHARSET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+CHARSET_SET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split.to_set
 MATCHER = /[^#{CHARSET}]/
 CHARS   = CHARSET.chars
 
@@ -30,7 +32,9 @@ end
 
 Benchmark.ips do |bench|
   bench.report('include?') { EXAMPLE.each_char.all? { |c| CHARSET.include? c } }
+  bench.report('include? optimized') { EXAMPLE.each_char.all? { |c| CHARSET_SET.include?(c) } }
   bench.report('Regexp#match?') { !CHARSET.match?(EXAMPLE) }
+  bench.report('Regexp#match? - commit cac33be') { EXAMPLE.each_char.all? { |c| !CHARSET.match?(MATCHER) } }
   bench.report('Array#-') { EXAMPLE.split('') - CHARS }
   bench.report('two finger') { two_finger(EXAMPLE) }
 
