@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
 
   spec.summary     = 'Ruby implementation of the K-Sortable Unique IDentifier'
   spec.description = spec.summary
-  spec.homepage    = 'https://github.com/michaelherold/ksuid'
+  spec.homepage    = 'https://github.com/michaelherold/ksuid-ruby'
   spec.license     = 'MIT'
 
   spec.files = %w[CHANGELOG.md CONTRIBUTING.md LICENSE.md README.md]
