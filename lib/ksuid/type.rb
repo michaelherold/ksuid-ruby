@@ -63,6 +63,36 @@ module KSUID
       other.to_s == to_s
     end
 
+    # Checks whether this KSUID hashes to the same hash key as another
+    #
+    # @api semipublic
+    #
+    # @example Checks whether two KSUIDs hash to the same key
+    #   KSUID.new.eql? KSUID.new
+    #
+    # @param other [KSUID::Type] the other KSUID to check against
+    # @return [Boolean]
+    def eql?(other)
+      hash == other.hash
+    end
+
+    # Generates the key to use when using a KSUID as a hash key
+    #
+    # @api semipublic
+    #
+    # @example Using a KSUID as a Hash key
+    #   ksuid1 = KSUID.new
+    #   ksuid2 = KSUID.from_base62(ksuid1.to_s)
+    #   values_by_ksuid = {}
+    #
+    #   values_by_ksuid[ksuid1] = "example"
+    #   values_by_ksuid[ksuid2] #=> "example"
+    #
+    # @return [Integer]
+    def hash
+      @uid.hash
+    end
+
     # Prints the KSUID for debugging within a console
     #
     # @api public
