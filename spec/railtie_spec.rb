@@ -20,8 +20,18 @@ ActiveRecord::Schema.define do
     t.ksuid :id, primary_key: true
   end
 
-  create_table :event_binaries, force: true do |t|
-    t.ksuid_binary :ksuid, index: true, unique: true
+  create_table :event_binaries, force: true, id: false do |t|
+    t.ksuid_binary :id, primary_key: true
+  end
+
+  create_table :event_correlations, force: true do |t|
+    t.references :from, type: :string, limit: 27, foreign_key: { to_table: :event_primary_keys }
+    t.references :to, type: :string, limit: 27, foreign_key: { to_table: :event_primary_keys }
+  end
+
+  create_table :event_binary_correlations, force: true do |t|
+    t.references :from, type: :binary, limit: 20, foreign_key: { to_table: :event_binaries }
+    t.references :to, type: :binary, limit: 20, foreign_key: { to_table: :event_binaries }
   end
 end
 
@@ -37,7 +47,25 @@ end
 
 # A demonstration of KSUIDs persisted as binaries
 class EventBinary < ActiveRecord::Base
-  include KSUID::ActiveRecord[:ksuid, binary: true]
+  include KSUID::ActiveRecord[:id, binary: true]
+end
+
+# A demonstration of a relation to a string KSUID primary key
+class EventCorrelation < ActiveRecord::Base
+  include KSUID::ActiveRecord[:from_id]
+  include KSUID::ActiveRecord[:to_id]
+
+  belongs_to :from, class_name: 'EventPrimaryKey'
+  belongs_to :to, class_name: 'EventPrimaryKey'
+end
+
+# A demonstration of a relation to a binary KSUID primary key
+class EventBinaryCorrelation < ActiveRecord::Base
+  include KSUID::ActiveRecord[:from_id, binary: true]
+  include KSUID::ActiveRecord[:to_id, binary: true]
+
+  belongs_to :from, class_name: 'EventBinary'
+  belongs_to :to, class_name: 'EventBinary'
 end
 
 ActiveSupport.run_load_hooks(:active_record, ActiveRecord::Base)
@@ -91,13 +119,108 @@ RSpec.describe 'ActiveRecord integration' do
     it 'generates a KSUID upon initialization' do
       event = EventBinary.new
 
-      expect(event.ksuid).to be_a(KSUID::Type)
+      expect(event.id).to be_a(KSUID::Type)
     end
 
     it 'persists the KSUID to the database' do
       event = EventBinary.create
 
-      expect(event.ksuid).to be_a(KSUID::Type)
+      expect(event.id).to be_a(KSUID::Type)
+    end
+  end
+
+  context 'with a reference to string KSUID-keyed tables' do
+    after(:each) do
+      EventCorrelation.delete_all
+      EventPrimaryKey.delete_all
+    end
+
+    it 'can relate to the other model' do
+      event1 = EventPrimaryKey.create!
+      event2 = EventPrimaryKey.create!
+      correlation = EventCorrelation.create!(from: event1, to: event2)
+
+      correlation.reload
+
+      aggregate_failures do
+        expect(correlation.from).to eq event1
+        expect(correlation.to).to eq event2
+      end
+    end
+
+    it 'can preload the other model' do
+      event1 = EventPrimaryKey.create!
+      event2 = EventPrimaryKey.create!
+
+      5.times { EventCorrelation.create!(from: event1, to: event2) }
+
+      expect do
+        EventCorrelation
+          .all
+          .map { |correlation| "#{correlation.from.id} #{correlation.to.id}" }
+      end.to issue_sql_queries(11)
+
+      expect do
+        EventCorrelation
+          .includes(:from, :to)
+          .map { |correlation| "#{correlation.from.id} #{correlation.to.id}" }
+      end.to issue_sql_queries(3)
+    end
+  end
+
+  context 'with a reference to binary KSUID-keyed tables' do
+    after(:each) do
+      EventBinaryCorrelation.delete_all
+      EventBinary.delete_all
+    end
+
+    it 'can relate to the other model' do
+      event1 = EventBinary.create!
+      event2 = EventBinary.create!
+      correlation = EventBinaryCorrelation.create!(from: event1, to: event2)
+
+      correlation.reload
+
+      aggregate_failures do
+        expect(correlation.from).to eq event1
+        expect(correlation.to).to eq event2
+      end
+    end
+
+    it 'can preload the other model' do
+      event1 = EventBinary.create!
+      event2 = EventBinary.create!
+
+      5.times { EventBinaryCorrelation.create!(from: event1, to: event2) }
+
+      expect do
+        EventBinaryCorrelation
+          .all
+          .map { |correlation| "#{correlation.from.id} #{correlation.to.id}" }
+      end.to issue_sql_queries(11)
+
+      expect do
+        EventBinaryCorrelation
+          .includes(:from, :to)
+          .map { |correlation| "#{correlation.from.id} #{correlation.to.id}" }
+      end.to issue_sql_queries(3)
+    end
+  end
+
+  matcher :issue_sql_queries do |expected|
+    supports_block_expectations
+
+    match do |actual|
+      @issued_queries = 0
+      counter = ->(*) { @issued_queries += 1 }
+
+      ActiveSupport::Notifications.subscribed(counter, 'sql.active_record', &actual)
+
+      expected == @issued_queries
+    end
+
+    failure_message do
+      "expected #{expected} queries, issued #{@issued_queries}"
     end
   end
 end

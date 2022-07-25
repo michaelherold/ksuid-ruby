@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 - `KSUID::Type` acts as a proper value object now, which means that you may use it as a Hash key or use it in ActiveRecord's `.includes`. `KSUID::Type#eql?`, `KSUID::Type#hash`, and `KSUID::Type#==` now work as expected. Note that `KSUID::Type#==` is more lax than `KSUID::Type#eql?` because it can also match any object that converts to a string matching its value. This means that you can use it to match against `String` KSUIDs.
 
+### Fixed
+
+- `ActiveRecord::QueryMethods#include` works as expected now due to the fix on the value object semantics of `KSUID::Type`.
+
 ## [0.3.0](https://github.com/michaelherold/ksuid/compare/v0.2.0...v0.3.0) - 2021-10-07
 
 ### Added
