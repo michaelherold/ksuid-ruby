@@ -11,6 +11,8 @@ RSpec.describe KSUID do
     KSUID.configure { |config| config.random_generator = generator }
 
     expect(KSUID.config.random_generator).to eq(generator)
+  ensure
+    KSUID.configure { |config| config.random_generator = KSUID::Configuration.default_generator }
   end
 
   describe '.call' do
