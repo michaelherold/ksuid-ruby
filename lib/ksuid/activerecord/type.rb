@@ -50,14 +50,6 @@ module KSUID
 
         KSUID.call(value).to_s
       end
-
-      # The identifier to use within ActiveRecord's type registry
-      #
-      # @api private
-      # @return [Symbol]
-      def type
-        :ksuid
-      end
     end
   end
 end

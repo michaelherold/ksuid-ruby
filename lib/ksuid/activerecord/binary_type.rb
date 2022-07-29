@@ -51,14 +51,6 @@ module KSUID
 
         super(KSUID.call(value).to_bytes)
       end
-
-      # The identifier to use within ActiveRecord's type registry
-      #
-      # @api private
-      # @return [Symbol]
-      def type
-        :ksuid_binary
-      end
     end
   end
 end
