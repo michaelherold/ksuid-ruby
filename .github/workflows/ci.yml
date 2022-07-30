@@ -3,7 +3,7 @@ name: Continuous integration
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
       - "*"
@@ -14,25 +14,21 @@ jobs:
     strategy:
       matrix:
         ruby:
-          - "2.5"
-          - "2.6"
           - "2.7"
-          - jruby-9.2.13.0
+          - "3.0"
+          - "3.1"
+          - jruby-9.3
         rails:
-          - "5.0"
-          - "5.1"
-          - "5.2"
           - "6.0"
           - "6.1"
+          - "7.0"
         exclude:
-          - ruby: "2.7"
-            rails: "5.0"
-          - ruby: "2.7"
-            rails: "5.1"
-          - ruby: "2.7"
-            rails: "5.2"
-          - ruby: "jruby-9.2.13.0"
-            rails: "6.1"
+          - ruby: "3.0"
+            rails: "6.0"
+          - ruby: "3.1"
+            rails: "6.0"
+          - ruby: jruby-9.3
+            rails: "7.0"
     name: Test Ruby ${{ matrix.ruby }} and Rails ${{ matrix.rails }}
     steps:
       - uses: actions/checkout@v2
