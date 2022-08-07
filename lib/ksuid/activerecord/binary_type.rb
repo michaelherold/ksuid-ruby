@@ -7,12 +7,12 @@ module KSUID
     # @api private
     #
     # @example Set an attribute as a KSUID using the verbose syntax
-    #   class Event < ActiveRecord::Base
+    #   class EventWithBareBinaryType < ActiveRecord::Base
     #     attribute :ksuid, KSUID::ActiveRecord::BinaryType.new, default: -> { KSUID.new }
     #   end
     #
     # @example Set an attribute as a KSUID using the pre-registered type
-    #   class Event < ActiveRecord::Base
+    #   class EventWithRegisteredBinaryType < ActiveRecord::Base
     #     attribute :ksuid, :ksuid_binary, default: -> { KSUID.new }
     #   end
     class BinaryType < ::ActiveRecord::Type::Binary
