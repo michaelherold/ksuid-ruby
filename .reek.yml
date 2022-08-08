@@ -1,0 +1,32 @@
+---
+detectors:
+  BooleanParameter:
+    exclude:
+      - "KSUID::ActiveRecord#self.[]"
+
+  ControlParameter:
+    exclude:
+      - "KSUID::ActiveRecord#self.[]"
+      - "KSUID::ActiveRecord#self.define_attribute"
+
+  ManualDispatch:
+    exclude:
+      - "KSUID::Configuration#assert_generator_is_callable"
+
+  UncommunicativeModuleName:
+    exclude:
+      - "KSUID::Base62"
+
+  UncommunicativeMethodName:
+    exclude:
+      - "KSUID#self.from_base62"
+
+  UtilityFunction:
+    exclude:
+      - "KSUID::ActiveRecord::BinaryType"
+      - "KSUID::ActiveRecord::Type"
+
+exclude_paths:
+  - benchmark/
+
+# vim: ft=yaml
