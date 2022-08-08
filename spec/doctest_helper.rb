@@ -2,9 +2,13 @@
 
 require 'rails'
 require 'active_record'
+require 'logger'
+
 require 'ksuid'
-require 'ksuid/activerecord'
-require 'ksuid/activerecord/table_definition'
+require 'active_record/ksuid/railtie'
+
+ActiveRecord::KSUID::Railtie.initializers.each(&:run)
+ActiveSupport.run_load_hooks(:active_record, ActiveRecord::Base)
 
 ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: ':memory:')
 ActiveRecord::Base.logger = Logger.new(IO::NULL)

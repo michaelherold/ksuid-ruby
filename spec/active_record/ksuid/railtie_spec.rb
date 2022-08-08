@@ -4,8 +4,10 @@ require 'rails'
 require 'active_record'
 require 'logger'
 
-require 'ksuid/activerecord'
-require 'ksuid/activerecord/table_definition'
+require 'active_record/ksuid/railtie'
+
+ActiveRecord::KSUID::Railtie.initializers.each(&:run)
+ActiveSupport.run_load_hooks(:active_record, ActiveRecord::Base)
 
 ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: ':memory:')
 ActiveRecord::Base.logger = Logger.new(IO::NULL)
@@ -33,27 +35,32 @@ ActiveRecord::Schema.define do
     t.references :from, type: :binary, limit: 20, foreign_key: { to_table: :event_binaries }
     t.references :to, type: :binary, limit: 20, foreign_key: { to_table: :event_binaries }
   end
+
+  create_table :deprecated_events, force: true do |t|
+    t.ksuid :ksuid
+    t.ksuid_binary :ksuid_binary
+  end
 end
 
-# A demonstration model for testing KSUID::ActiveRecord
+# A demonstration model for testing ActiveRecord::KSUID
 class Event < ActiveRecord::Base
-  include KSUID::ActiveRecord[:ksuid, created_at: true]
+  include ActiveRecord::KSUID[:ksuid, created_at: true]
 end
 
 # A demonstration of KSUIDs as the primary key on a record
 class EventPrimaryKey < ActiveRecord::Base
-  include KSUID::ActiveRecord[:id]
+  include ActiveRecord::KSUID[:id]
 end
 
 # A demonstration of KSUIDs persisted as binaries
 class EventBinary < ActiveRecord::Base
-  include KSUID::ActiveRecord[:id, binary: true]
+  include ActiveRecord::KSUID[:id, binary: true]
 end
 
 # A demonstration of a relation to a string KSUID primary key
 class EventCorrelation < ActiveRecord::Base
-  include KSUID::ActiveRecord[:from_id]
-  include KSUID::ActiveRecord[:to_id]
+  include ActiveRecord::KSUID[:from_id]
+  include ActiveRecord::KSUID[:to_id]
 
   belongs_to :from, class_name: 'EventPrimaryKey'
   belongs_to :to, class_name: 'EventPrimaryKey'
@@ -61,14 +68,14 @@ end
 
 # A demonstration of a relation to a binary KSUID primary key
 class EventBinaryCorrelation < ActiveRecord::Base
-  include KSUID::ActiveRecord[:from_id, binary: true]
-  include KSUID::ActiveRecord[:to_id, binary: true]
+  include ActiveRecord::KSUID[:from_id, binary: true]
+  include ActiveRecord::KSUID[:to_id, binary: true]
 
   belongs_to :from, class_name: 'EventBinary'
   belongs_to :to, class_name: 'EventBinary'
 end
 
-ActiveSupport.run_load_hooks(:active_record, ActiveRecord::Base)
+# A demonstration that the deprecated constant still works
 
 RSpec.describe 'ActiveRecord integration' do
   context 'with a non-primary field as the KSUID' do
@@ -207,6 +214,27 @@ RSpec.describe 'ActiveRecord integration' do
     end
   end
 
+  context 'the deprecated constant' do
+    it 'still works for both types', :aggregate_failures do
+      warnings = with_captured_deprecation_warnings do
+        # An event that uses the deprecated KSUID::ActiveRecord constant
+        class DeprecatedEvent < ActiveRecord::Base # rubocop:disable Lint/ConstantDefinitionInBlock
+          include KSUID::ActiveRecord[:ksuid]
+          include KSUID::ActiveRecord[:ksuid_binary, binary: true]
+        end
+      end
+
+      DeprecatedEvent.create!
+      event = DeprecatedEvent.first
+
+      expect(event.ksuid).to be_a KSUID::Type
+      expect(event.ksuid_binary).to be_a KSUID::Type
+
+      expect(warnings.length).to eq 2
+      expect(warnings).to all match(/KSUID::ActiveRecord/)
+    end
+  end
+
   matcher :issue_sql_queries do |expected|
     supports_block_expectations
 
@@ -222,5 +250,19 @@ RSpec.describe 'ActiveRecord integration' do
     failure_message do
       "expected #{expected} queries, issued #{@issued_queries}"
     end
+  end
+
+  def with_captured_deprecation_warnings
+    deprecator = ActiveSupport::Deprecation.instance
+
+    [].tap do |warnings|
+      allow(deprecator).to receive(:warn) do |message, _caller_locations|
+        warnings << message
+      end
+
+      yield if block_given?
+    end
+  ensure
+    RSpec::Mocks.space.proxy_for(deprecator).reset
   end
 end

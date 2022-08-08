@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.homepage    = 'https://github.com/michaelherold/ksuid-ruby'
   spec.license     = 'MIT'
 
-  spec.files = %w[CHANGELOG.md CONTRIBUTING.md LICENSE.md README.md]
+  spec.files = %w[CHANGELOG.md CONTRIBUTING.md LICENSE.md README.md UPGRADING.md]
   spec.files += %w[ksuid.gemspec]
   spec.files += Dir['lib/**/*.rb']
   spec.require_paths = ['lib']

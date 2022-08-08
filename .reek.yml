@@ -2,12 +2,13 @@
 detectors:
   BooleanParameter:
     exclude:
+      - "ActiveRecord::KSUID#self.[]"
       - "KSUID::ActiveRecord#self.[]"
 
   ControlParameter:
     exclude:
-      - "KSUID::ActiveRecord#self.[]"
-      - "KSUID::ActiveRecord#self.define_attribute"
+      - "ActiveRecord::KSUID#self.[]"
+      - "ActiveRecord::KSUID#self.define_attribute"
 
   ManualDispatch:
     exclude:
@@ -23,8 +24,8 @@ detectors:
 
   UtilityFunction:
     exclude:
-      - "KSUID::ActiveRecord::BinaryType"
-      - "KSUID::ActiveRecord::Type"
+      - "ActiveRecord::KSUID::BinaryType"
+      - "ActiveRecord::KSUID::Type"
 
 exclude_paths:
   - benchmark/

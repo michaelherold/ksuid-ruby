@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 0.5.0 - Unreleased
+
+### Deprecated
+
+- `KSUID::ActiveRecord` is now `ActiveRecord::KSUID`. The original constant will continue to work until v1.0.0, but will emit a warning upon boot of your application. To silence the deprecation, change all uses of `KSUID::ActiveRecord` to the new constant, `ActiveRecord::KSUID`. See the [upgrading notice][./UPGRADING.md] for more information.
+
 ## [0.4.0](https://github.com/michaelherold/ksuid/compare/v0.3.0...v0.4.0) - 2022-07-29
 
 ### Added

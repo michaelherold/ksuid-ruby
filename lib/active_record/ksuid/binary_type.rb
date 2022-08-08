@@ -1,21 +1,21 @@
 # frozen_string_literal: true
 
-module KSUID
-  module ActiveRecord
-    # A string-serialized KSUID for storage within an ActiveRecord database
+module ActiveRecord
+  module KSUID
+    # A binary-serialized KSUID for storage within an ActiveRecord database
     #
     # @api private
     #
     # @example Set an attribute as a KSUID using the verbose syntax
-    #   class EventWithBareType < ActiveRecord::Base
-    #     attribute :ksuid, KSUID::ActiveRecord::Type.new, default: -> { KSUID.new }
+    #   class EventWithBareBinaryType < ActiveRecord::Base
+    #     attribute :ksuid, ActiveRecord::KSUID::BinaryType.new, default: -> { KSUID.new }
     #   end
     #
     # @example Set an attribute as a KSUID using the pre-registered type
-    #   class EventWithRegisteredType < ActiveRecord::Base
-    #     attribute :ksuid, :ksuid, default: -> { KSUID.new }
+    #   class EventWithRegisteredBinaryType < ActiveRecord::Base
+    #     attribute :ksuid, :ksuid_binary, default: -> { KSUID.new }
     #   end
-    class Type < ::ActiveRecord::Type::String
+    class BinaryType < ::ActiveRecord::Type::Binary
       # Casts a value from user input into a KSUID
       #
       # Type casting happens via the attribute setter and can take input from
@@ -28,7 +28,7 @@ module KSUID
       # @param value [String, Array<Integer>, KSUID::Type] the value to cast into a KSUID
       # @return [KSUID::Type] the type-casted value
       def cast(value)
-        KSUID.call(value)
+        ::KSUID.call(value)
       end
 
       # Converts a value from database input to a KSUID
@@ -38,7 +38,8 @@ module KSUID
       def deserialize(value)
         return unless value
 
-        KSUID.from_base62(value)
+        value = value.to_s if value.is_a?(::ActiveRecord::Type::Binary::Data)
+        ::KSUID.call(value)
       end
 
       # Casts the value from a KSUID into a database-understandable format
@@ -48,10 +49,10 @@ module KSUID
       def serialize(value)
         return unless value
 
-        KSUID.call(value).to_s
+        super(::KSUID.call(value).to_bytes)
       end
     end
   end
 end
 
-ActiveRecord::Type.register(:ksuid, KSUID::ActiveRecord::Type)
+ActiveRecord::Type.register(:ksuid_binary, ActiveRecord::KSUID::BinaryType)

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module KSUID
-  module ActiveRecord
+module ActiveRecord
+  module KSUID
     # Extends ActiveRecord's table definition language for KSUIDs
     module TableDefinition
       # Defines a field as a string-based KSUID
@@ -52,5 +52,3 @@ module KSUID
     end
   end
 end
-
-ActiveRecord::ConnectionAdapters::TableDefinition.include(KSUID::ActiveRecord::TableDefinition)
