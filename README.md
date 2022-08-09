@@ -104,6 +104,8 @@ end
 
 Whether you are using ActiveRecord inside an existing project or in a new project, usage is simple. Additionally, you can use it with or without Rails.
 
+_Note: In v1.0.0 of KSUID for Ruby, we will extract this behavior into a separate gem, `activerecord-ksuid`. It will be API-compatible with the implementation in v0.5.0+ of KSUID for Ruby. There will be upgrade instructions for v1.0.0 once we release it._
+
 #### Adding to an existing model
 
 Within a Rails project, it is very easy to get started using KSUIDs within your models. You can use the `ksuid` column type in a Rails migration to add a column to an existing model:
@@ -124,7 +126,7 @@ Then, to add proper handling to the field, you will want to mix a module into th
 
 ```ruby
 class Event < ApplicationRecord
-  include KSUID::ActiveRecord[:unique_id]
+  include ActiveRecord::KSUID[:unique_id]
 end
 ```
 
@@ -148,7 +150,7 @@ Once you have generated the table that you will use for your model, you will nee
 
 ```ruby
 class Event < ApplicationRecord
-  include KSUID::ActiveRecord[:my_field_name]
+  include ActiveRecord::KSUID[:my_field_name]
 end
 ```
 
@@ -168,7 +170,7 @@ You will need to mix in the module into your model as well:
 
 ```ruby
 class Event < ApplicationRecord
-  include KSUID::ActiveRecord[:id]
+  include ActiveRecord::KSUID[:id]
 end
 ```
 
@@ -177,10 +179,10 @@ end
 Outside of Rails, you cannot rely on the Railtie to load the appropriate files for you automatically. Toward the start of your application's boot process, you will want to require the following:
 
 ```ruby
-require 'ksuid/activerecord'
+require 'active_record/ksuid'
 
 # If you will be using the ksuid column type in a migration
-require 'ksuid/activerecord/table_definition'
+require 'active_record/ksuid/table_definition'
 ```
 
 Once you have required the file(s) that you need, everything else will work as it does above.
@@ -193,7 +195,7 @@ When you include the KSUID module into your model, you will want to pass the `:b
 
 ```ruby
 class Event < ApplicationRecord
-  include KSUID::ActiveRecord[:my_field_name, binary: true]
+  include ActiveRecord::KSUID[:my_field_name, binary: true]
 end
 ```
 
@@ -203,7 +205,7 @@ Since KSUIDs include a timestamp as well, you can infer the `#created_at` timest
 
 ```ruby
 class Event < ApplicationRecord
-  include KSUID::ActiveRecord[:my_field_name, created_at: true]
+  include ActiveRecord::KSUID[:my_field_name, created_at: true]
 end
 ```
 

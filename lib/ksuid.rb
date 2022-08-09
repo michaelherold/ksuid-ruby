@@ -206,4 +206,4 @@ module KSUID
   private_class_method :cast_string
 end
 
-require 'ksuid/railtie' if defined?(Rails)
+require 'active_record/ksuid/railtie' if defined?(Rails)
