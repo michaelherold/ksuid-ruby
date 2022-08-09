@@ -35,7 +35,7 @@ module KSUID
     # @param string [String] the string to check for compatibility
     # @return [Boolean]
     def self.compatible?(string)
-      string.each_char.all? { |char| !MATCHER.match?(char) }
+      !MATCHER.match?(string)
     end
 
     # Decodes a base 62-encoded string into an integer

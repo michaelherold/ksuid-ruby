@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe KSUID::Base62 do
+  describe '#compatible?' do
+    it 'correctly detects invalid values in a string' do
+      expect(KSUID::Base62.compatible?('15Ew2nYeRDscBipuJicYjl970D1')).to be true
+      expect(KSUID::Base62.compatible?(("\xFF" * 20).b)).not_to be true
+    end
+  end
+
   describe '#decode' do
     it 'decodes base 62 numbers that may or may not be zero-padded' do
       %w[awesomesauce 00000000awesomesauce].each do |encoded|
