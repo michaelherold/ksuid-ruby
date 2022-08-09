@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 - `KSUID::ActiveRecord` is now `ActiveRecord::KSUID`. The original constant will continue to work until v1.0.0, but will emit a warning upon boot of your application. To silence the deprecation, change all uses of `KSUID::ActiveRecord` to the new constant, `ActiveRecord::KSUID`. See the [upgrading notice][./UPGRADING.md] for more information.
 
+### Miscellaneous
+
+- The compatibility check for the Base62 implementation in the gem is about 10x faster now. The original optimization did not optimize as much due to an error with the benchmark. This change has a tested benchmark that shows a great improvement. Note that this is a micro-optimization and we see no real performance gain in the parsing of KSUID strings.
+
 ## [0.4.0](https://github.com/michaelherold/ksuid/compare/v0.3.0...v0.4.0) - 2022-07-29
 
 ### Added
