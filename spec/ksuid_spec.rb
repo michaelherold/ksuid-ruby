@@ -58,4 +58,21 @@ RSpec.describe KSUID do
       expect { KSUID.call(1) }.to raise_error(ArgumentError)
     end
   end
+
+  describe '.string' do
+    it 'uses the current time and a random payload by default' do
+      string = KSUID.string
+
+      expect(string.length).to eq 27
+    end
+
+    it 'accepts a payload and a time' do
+      string = KSUID.string(
+        payload: ("\xFF" * KSUID::BYTES[:payload]),
+        time: Time.new(2150, 6, 19, 23, 21, 35, 'UTC')
+      )
+
+      expect(string).to eq KSUID::MAX_STRING_ENCODED
+    end
+  end
 end

@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 ## 0.5.0 - Unreleased
 
+### Added
+
+- If you'd rather deal in KSUID strings instead of `KSUID::Type`s, you can now generate them simply with `KSUID.string`. It takes the same arguments, `payload` and `time` as `KSUID.new`, but returns a string instead of a `KSUID::Type`.
+
 ### Deprecated
 
 - `KSUID::ActiveRecord` is now `ActiveRecord::KSUID`. The original constant will continue to work until v1.0.0, but will emit a warning upon boot of your application. To silence the deprecation, change all uses of `KSUID::ActiveRecord` to the new constant, `ActiveRecord::KSUID`. See the [upgrading notice][./UPGRADING.md] for more information.

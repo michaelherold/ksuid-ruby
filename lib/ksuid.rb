@@ -176,6 +176,7 @@ module KSUID
   # Instantiates a new KSUID
   #
   # @api public
+  # @since 0.5.0
   #
   # @example Generate a new KSUID for the current second
   #   KSUID.new
@@ -188,6 +189,23 @@ module KSUID
   # @return [KSUID::Type] the generated KSUID
   def self.new(payload: nil, time: Time.now)
     Type.new(payload: payload, time: time)
+  end
+
+  # Generates a KSUID string
+  #
+  # @api public
+  #
+  # @example Generate a new KSUID string for the current second
+  #   KSUID.string
+  #
+  # @example Generate a new KSUID string for a given timestamp
+  #   KSUID.string(time: Time.parse('2017-11-05 15:00:04 UTC'))
+  #
+  # @param payload [String, Array<Integer>, nil] the payload for the KSUID string
+  # @param time [Time] the timestamp to use for the KSUID string
+  # @return [String] the generated string
+  def self.string(payload: nil, time: Time.now)
+    Type.new(payload: payload, time: time).to_s
   end
 
   # Casts a string into a KSUID
