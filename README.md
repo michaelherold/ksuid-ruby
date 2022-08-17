@@ -100,6 +100,28 @@ KSUID.configure do |config|
 end
 ```
 
+### Prefixed KSUIDs
+
+If you use KSUIDs in multiple contexts, you can prefix them to make them easily identifiable.
+
+```ruby
+ksuid = KSUID.prefixed('evt_')
+```
+
+Just like a normal KSUID, you can use a specific timestamp:
+
+``` ruby
+ksuid = KSUID.prefixed('evt_', time: time)  # where time is a Time-like object
+```
+
+You can also parse a prefixed KSUID from a string that you received:
+
+```ruby
+ksuid = KSUID::Prefixed.from_base62(base62_string, prefix: 'evt_')
+```
+
+Prefixed KSUIDs order themselves with non-prefixed KSUIDs as if their prefix did not exist. With other prefixed KSUIDs, they order first by their prefix, then their timestamp.
+
 ### ActiveRecord
 
 Whether you are using ActiveRecord inside an existing project or in a new project, usage is simple. Additionally, you can use it with or without Rails.
@@ -198,6 +220,28 @@ class Event < ApplicationRecord
   include ActiveRecord::KSUID[:my_field_name, binary: true]
 end
 ```
+
+#### Using a prefix on your KSUID field
+
+For prefixed KSUIDs in ActiveRecord, you must pass the intended prefix during table definition so that the field is of appropriate size.
+
+```ruby
+class CreateEvents < ActiveRecord::Migration[5.2]
+  create_table :events do |table|
+    table.ksuid :ksuid, prefix: 'evt_'
+  end
+end
+```
+
+You also must pass it in the module builder that you include in your model:
+
+```ruby
+class Event < ApplicationRecord
+  include ActiveRecord::KSUID[:ksuid, prefix: 'evt_']
+end
+```
+
+You cannot use a prefix with a binary-encoded KSUID.
 
 #### Use the KSUID as your `created_at` timestamp
 

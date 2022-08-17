@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require_relative 'ksuid/configuration'
-require_relative 'ksuid/type'
 require_relative 'ksuid/version'
 
 # The K-Sortable Unique IDentifier (KSUID)
@@ -63,7 +62,7 @@ module KSUID
   # The number of bytes that are used to represent each part of a KSUID
   #
   # @return [Hash{Symbol => Integer}] the map of data type to number of bytes
-  BYTES = { payload: 16, timestamp: 4, total: 20 }.freeze
+  BYTES = { base62: 27, payload: 16, timestamp: 4, total: 20 }.freeze
 
   # The number of characters in a base 62-encoded KSUID
   #
@@ -74,6 +73,11 @@ module KSUID
   #
   # @return [String]
   MAX_STRING_ENCODED = 'aWgEPTl1tmebfsQzFP4bxwgy80V'
+
+  autoload :Base62, 'ksuid/base62'
+  autoload :Prefixed, 'ksuid/prefixed'
+  autoload :Type, 'ksuid/type'
+  autoload :Utils, 'ksuid/utils'
 
   # Converts a KSUID-compatible value into an actual KSUID
   #
@@ -89,6 +93,7 @@ module KSUID
     return unless ksuid
 
     case ksuid
+    when KSUID::Prefixed then ksuid.to_ksuid
     when KSUID::Type then ksuid
     when Array then KSUID.from_bytes(ksuid)
     when String then cast_string(ksuid)
@@ -189,6 +194,25 @@ module KSUID
   # @return [KSUID::Type] the generated KSUID
   def self.new(payload: nil, time: Time.now)
     Type.new(payload: payload, time: time)
+  end
+
+  # Instantiates a new {KSUID::Prefixed}
+  #
+  # @api public
+  # @since 0.5.0
+  #
+  # @example Generate a new prefixed KSUID for the current second
+  #   KSUID.prefixed('evt_')
+  #
+  # @example Generate a new prefixed KSUID for a given timestamp
+  #   KSUID.prefixed('cus_', time: Time.parse('2022-08-16 10:36:00 UTC'))
+  #
+  # @param prefix [String] the prefix to apply to the KSUID
+  # @param payload [String, Array<Integer>, nil] the payload for the KSUID
+  # @param time [Time] the timestamp to use for the KSUID
+  # @return [KSUID::Prefixed] the generated, prefixed KSUID
+  def self.prefixed(prefix, payload: nil, time: Time.now)
+    Prefixed.new(prefix, payload: payload, time: time)
   end
 
   # Generates a KSUID string

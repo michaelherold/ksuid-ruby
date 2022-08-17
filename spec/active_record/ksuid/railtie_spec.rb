@@ -36,6 +36,10 @@ ActiveRecord::Schema.define do
     t.references :to, type: :binary, limit: 20, foreign_key: { to_table: :event_binaries }
   end
 
+  create_table :event_prefixes, force: true, id: false do |t|
+    t.ksuid :id, primary_key: true, prefix: 'evt_'
+  end
+
   create_table :deprecated_events, force: true do |t|
     t.ksuid :ksuid
     t.ksuid_binary :ksuid_binary
@@ -75,7 +79,10 @@ class EventBinaryCorrelation < ActiveRecord::Base
   belongs_to :to, class_name: 'EventBinary'
 end
 
-# A demonstration that the deprecated constant still works
+# A demonstration of a prefixed KSUID
+class EventPrefix < ActiveRecord::Base
+  include ActiveRecord::KSUID[:id, prefix: 'evt_']
+end
 
 RSpec.describe 'ActiveRecord integration' do
   context 'with a non-primary field as the KSUID' do
@@ -133,6 +140,28 @@ RSpec.describe 'ActiveRecord integration' do
       event = EventBinary.create
 
       expect(event.id).to be_a(KSUID::Type)
+    end
+  end
+
+  context 'with a prefixed KSUID field' do
+    after { EventPrefix.delete_all }
+
+    it 'generates a prefixed KSUID upon initialization' do
+      event = EventPrefix.new
+
+      expect(event.id).to be_a(KSUID::Prefixed)
+    end
+
+    it 'persists the prefixed KSUID to the database' do
+      event = EventPrefix.create
+
+      expect(event.id).to be_a(KSUID::Prefixed)
+    end
+
+    it 'converts a different prefix into the expected one' do
+      event = EventPrefix.create(id: 'cus_2DTtbae0N9LqMntLxfKjh7jS9ak')
+
+      expect(event.id.to_s).to eq('evt_2DTtbae0N9LqMntLxfKjh7jS9ak')
     end
   end
 

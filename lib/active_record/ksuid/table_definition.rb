@@ -22,9 +22,12 @@ module ActiveRecord
       #
       # @param args [Array<Symbol>] the list of fields to define as KSUIDs
       # @param options [Hash] see {ActiveRecord::ConnectionAdapters::TableDefinition}
+      # @option options [String] :prefix the prefix expected in front of the KSUID
       # @return [void]
       def ksuid(*args, **options)
-        args.each { |name| column(name, :string, **options.merge(limit: 27)) }
+        prefix_length = options.delete(:prefix)&.length || 0
+
+        args.each { |name| column(name, :string, **options.merge(limit: 27 + prefix_length)) }
       end
 
       # Defines a field as a binary-based KSUID
