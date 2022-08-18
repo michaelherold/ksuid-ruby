@@ -2,8 +2,8 @@
 
 require 'time'
 
-RSpec.describe 'compatibility tests' do
-  it 'handles the maximum properly' do
+RSpec.describe 'compatibility tests', type: :compatibility do
+  it 'handles the maximum properly', :aggregate_failures do
     ksuid = KSUID.from_base62('aWgEPTl1tmebfsQzFP4bxwgy80V')
 
     expect(ksuid.to_s).to eq('aWgEPTl1tmebfsQzFP4bxwgy80V')
@@ -13,7 +13,7 @@ RSpec.describe 'compatibility tests' do
     expect(ksuid.raw).to eq('FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF')
   end
 
-  it 'handles the minimum properly' do
+  it 'handles the minimum properly', :aggregate_failures do
     ksuid = KSUID.from_base62('000000000000000000000000000')
 
     expect(ksuid.to_s).to eq('000000000000000000000000000')
@@ -23,7 +23,7 @@ RSpec.describe 'compatibility tests' do
     expect(ksuid.raw).to eq('0000000000000000000000000000000000000000')
   end
 
-  it 'handles an example value' do
+  it 'handles an example value', :aggregate_failures do
     ksuid = KSUID.from_base62('0vdbMgWkU6slGpLVCqEFwkkZvuW')
 
     expect(ksuid.to_s).to eq('0vdbMgWkU6slGpLVCqEFwkkZvuW')
@@ -33,7 +33,7 @@ RSpec.describe 'compatibility tests' do
     expect(ksuid.payload).to eq('049CC215C099D42B784DBE99341BD79C')
   end
 
-  it 'handles an example value' do
+  it 'handles another example value', :aggregate_failures do
     ksuid = KSUID.from_base62('0vdbMkSk7XwvMeKS6aZMM2AVZ4G')
 
     expect(ksuid.to_s).to eq('0vdbMkSk7XwvMeKS6aZMM2AVZ4G')

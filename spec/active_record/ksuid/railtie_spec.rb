@@ -84,7 +84,7 @@ class EventPrefix < ActiveRecord::Base
   include ActiveRecord::KSUID[:id, prefix: 'evt_']
 end
 
-RSpec.describe 'ActiveRecord integration' do
+RSpec.describe 'ActiveRecord integration', type: :integration do
   context 'with a non-primary field as the KSUID' do
     after { Event.delete_all }
 
@@ -107,7 +107,7 @@ RSpec.describe 'ActiveRecord integration' do
       expect(event.created_at).not_to be_nil
     end
 
-    it 'can be looked up via a string, byte array, or KSUID' do
+    it 'can be looked up via a string, byte array, or KSUID', :aggregate_failures do
       id = KSUID.new
       event = Event.create!(ksuid: id)
 
@@ -166,25 +166,23 @@ RSpec.describe 'ActiveRecord integration' do
   end
 
   context 'with a reference to string KSUID-keyed tables' do
-    after(:each) do
+    after do
       EventCorrelation.delete_all
       EventPrimaryKey.delete_all
     end
 
-    it 'can relate to the other model' do
+    it 'can relate to the other model', :aggregate_failures do
       event1 = EventPrimaryKey.create!
       event2 = EventPrimaryKey.create!
       correlation = EventCorrelation.create!(from: event1, to: event2)
 
       correlation.reload
 
-      aggregate_failures do
-        expect(correlation.from).to eq event1
-        expect(correlation.to).to eq event2
-      end
+      expect(correlation.from).to eq event1
+      expect(correlation.to).to eq event2
     end
 
-    it 'can preload the other model' do
+    it 'can preload the other model', :aggregate_failures do
       event1 = EventPrimaryKey.create!
       event2 = EventPrimaryKey.create!
 
@@ -205,25 +203,23 @@ RSpec.describe 'ActiveRecord integration' do
   end
 
   context 'with a reference to binary KSUID-keyed tables' do
-    after(:each) do
+    after do
       EventBinaryCorrelation.delete_all
       EventBinary.delete_all
     end
 
-    it 'can relate to the other model' do
+    it 'can relate to the other model', :aggregate_failures do
       event1 = EventBinary.create!
       event2 = EventBinary.create!
       correlation = EventBinaryCorrelation.create!(from: event1, to: event2)
 
       correlation.reload
 
-      aggregate_failures do
-        expect(correlation.from).to eq event1
-        expect(correlation.to).to eq event2
-      end
+      expect(correlation.from).to eq event1
+      expect(correlation.to).to eq event2
     end
 
-    it 'can preload the other model' do
+    it 'can preload the other model', :aggregate_failures do
       event1 = EventBinary.create!
       event2 = EventBinary.create!
 
@@ -243,14 +239,16 @@ RSpec.describe 'ActiveRecord integration' do
     end
   end
 
-  context 'the deprecated constant' do
+  context 'with the deprecated constant' do
     it 'still works for both types', :aggregate_failures do
       warnings = with_captured_deprecation_warnings do
         # An event that uses the deprecated KSUID::ActiveRecord constant
-        class DeprecatedEvent < ActiveRecord::Base # rubocop:disable Lint/ConstantDefinitionInBlock
+        deprecated_event = Class.new(ActiveRecord::Base) do
           include KSUID::ActiveRecord[:ksuid]
           include KSUID::ActiveRecord[:ksuid_binary, binary: true]
         end
+
+        stub_const('DeprecatedEvent', deprecated_event)
       end
 
       DeprecatedEvent.create!

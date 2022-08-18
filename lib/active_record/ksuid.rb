@@ -63,9 +63,14 @@ module ActiveRecord
       type = 'ksuid_binary' if binary
 
       mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
-        def self.included(base)
-          base.__send__(:attribute, :#{field}, :#{type}, default: -> { ::KSUID.new })
-        end
+        def self.included(base)         # def self.included(base)
+          base.__send__(                #   base.__send__(
+            :attribute,                 #     :attribute,
+            :#{field},                  #     :id,
+            :#{type},                   #     :ksuid,
+            default: -> { ::KSUID.new } #     default: -> { ::KSUID.new }
+          )                             #   )
+        end                             # end
       RUBY
     end
     private_class_method :define_attribute
@@ -80,9 +85,15 @@ module ActiveRecord
     # @return [void]
     def self.define_prefixed_attribute(field, mod, prefix)
       mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
-        def self.included(base)
-          base.__send__(:attribute, :#{field}, :ksuid_prefixed, prefix: #{prefix.inspect}, default: -> { ::KSUID.prefixed(#{prefix.inspect}) })
-        end
+        def self.included(base)                                 # def self.included(base)
+          base.__send__(                                        #   base.__send__(
+            :attribute,                                         #     :attribute,
+            :#{field},                                          #     :id,
+            :ksuid_prefixed,                                    #     :ksuid_prefixed,
+            prefix: #{prefix.inspect},                          #     prefix: 'evt_'
+            default: -> { ::KSUID.prefixed(#{prefix.inspect}) } #     default: -> { ::KSUID.prefixed('evt_') }
+          )                                                     #   )
+        end                                                     # end
       RUBY
     end
     private_class_method :define_prefixed_attribute
@@ -96,11 +107,11 @@ module ActiveRecord
     # @return [void]
     def self.define_created_at(field, mod)
       mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
-        def created_at
-          return unless #{field}
+        def created_at           # def created_at
+          return unless #{field} #   return unless ksuid
 
-          #{field}.to_time
-        end
+          #{field}.to_time       #   ksuid.to_time
+        end                      # end
       RUBY
     end
     private_class_method :define_created_at

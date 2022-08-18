@@ -51,12 +51,12 @@ module KSUID
     def self.decode(ksuid)
       result = 0
 
-      ksuid.split('').each_with_index do |char, position|
+      ksuid.chars.each_with_index do |char, position|
         unless (digit = CHARSET.index(char))
           raise(ArgumentError, "#{ksuid} is not a base 62 number")
         end
 
-        result += digit * BASE**(ksuid.length - (position + 1))
+        result += digit * (BASE**(ksuid.length - (position + 1)))
       end
 
       result
@@ -76,7 +76,7 @@ module KSUID
       chars = encode_without_padding(number)
 
       chars << padding if chars.empty?
-      chars.reverse.join('').rjust(STRING_LENGTH, padding)
+      chars.reverse.join.rjust(STRING_LENGTH, padding)
     end
 
     # Encodes a byte string or byte array into base 62
