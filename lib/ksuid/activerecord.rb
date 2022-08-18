@@ -25,12 +25,13 @@ module KSUID
     #
     # @param (see ::ActiveRecord::KSUID.[])
     # @return  (see ::ActiveRecord::KSUID.[])
+    def self.[](field, created_at: false, binary: false, prefix: nil)
       ActiveSupport::Deprecation.instance.warn(
         'KSUID::ActiveRecord is deprecated! Use ActiveRecord::KSUID instead.',
         caller_locations
       )
 
-      ::ActiveRecord::KSUID[field, created_at: created_at, binary: binary]
+      ::ActiveRecord::KSUID[field, created_at: created_at, binary: binary, prefix: prefix]
     end
   end
 end
