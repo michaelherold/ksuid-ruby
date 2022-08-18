@@ -1,8 +1,18 @@
 # frozen_string_literal: true
 
-require 'rails'
-require 'active_record'
 require 'logger'
+
+begin
+  require 'rails'
+  require 'active_record'
+rescue LoadError
+  warn <<~MSG
+    Skipping Rails tests because you're not running in Appraisals
+
+    Try running `appraisal rspec` or `appraisal rails-7.0 rspec`
+  MSG
+  return
+end
 
 require 'active_record/ksuid/railtie'
 
