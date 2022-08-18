@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'base62'
-require_relative 'utils'
-
 module KSUID
   # Encapsulates the data type for a KSUID
   #

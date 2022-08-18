@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'active_record/ksuid/binary_type'
+require 'active_record/ksuid/prefixed_type'
 require 'active_record/ksuid/type'
 
 # The Ruby on Rails object-relational mapper
@@ -26,17 +27,27 @@ module ActiveRecord
     #     include ActiveRecord::KSUID[:remote_id, created_at: true]
     #   end
     #
+    # @example Add a prefixed `#ksuid` attribute to a model
+    #   class Event < ActiveRecord::Base
+    #     include ActiveRecord::KSUID[:ksuid, prefix: 'evt_']
+    #   end
+    #
     # @param field [String, Symbol] the name of the field to use as a KSUID
     # @param created_at [Boolean] whether to override the `#created_at` method
     # @param binary [Boolean] whether to store the KSUID as a binary or a string
+    # @param prefix [String, nil] a prefix to prepend to the KSUID attribute
     # @return [Module] the module to include into the model
-    def self.[](field, created_at: false, binary: false)
-      Module
-        .new
-        .tap do |mod|
+    def self.[](field, created_at: false, binary: false, prefix: nil)
+      raise ArgumentError, 'cannot include a prefix on a binary KSUID' if binary && prefix
+
+      Module.new.tap do |mod|
+        if prefix
+          define_prefixed_attribute(field, mod, prefix)
+        else
           define_attribute(field, mod, binary)
-          define_created_at(field, mod) if created_at
         end
+        define_created_at(field, mod) if created_at
+      end
     end
 
     # Defines the attribute method that will be written in the module
@@ -45,6 +56,7 @@ module ActiveRecord
     #
     # @param field [String, Symbol] the name of the field to set as an attribute
     # @param mod [Module] the module to extend
+    # @param binary [Boolean] whether to store the KSUID as a binary or a string
     # @return [void]
     def self.define_attribute(field, mod, binary)
       type = 'ksuid'
@@ -57,6 +69,23 @@ module ActiveRecord
       RUBY
     end
     private_class_method :define_attribute
+
+    # Defines the attribute method that will be written in the module for a field
+    #
+    # @api private
+    #
+    # @param field [String, Symbol] the name of the field to set as an attribute
+    # @param mod [Module] the module to extend
+    # @param prefix [String] the prefix to add to the KSUID
+    # @return [void]
+    def self.define_prefixed_attribute(field, mod, prefix)
+      mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
+        def self.included(base)
+          base.__send__(:attribute, :#{field}, :ksuid_prefixed, prefix: #{prefix.inspect}, default: -> { ::KSUID.prefixed(#{prefix.inspect}) })
+        end
+      RUBY
+    end
+    private_class_method :define_prefixed_attribute
 
     # Defines the `#created_at` method that will be written in the module
     #

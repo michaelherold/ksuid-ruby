@@ -9,6 +9,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Added
 
 - If you'd rather deal in KSUID strings instead of `KSUID::Type`s, you can now generate them simply with `KSUID.string`. It takes the same arguments, `payload` and `time` as `KSUID.new`, but returns a string instead of a `KSUID::Type`.
+- `KSUID.prefixed` and the `KSUID::Prefixed` class now can generate prefixed KSUIDs to make them visually identifiable for their source. You cannot prefix a binary-encoded KSUID, only base 62-encoded ones.
+- `ActiveRecord::KSUID` now accepts a `prefix:` argument for handling prefixed KSUIDs. In addition, the `ksuid` column type also accepts a `prefix:` argument to calculate the intended size of the column with the prefix.
 
 ### Deprecated
 
