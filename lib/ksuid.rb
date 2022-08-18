@@ -40,6 +40,9 @@ require_relative 'ksuid/version'
 # @example Generate a new KSUID
 #   KSUID.new
 #
+# @example Generate a KSUID prefixed by `evt_`
+#   KSUID.prefixed('evt_')
+#
 # @example Parse a KSUID string that you have received
 #   KSUID.from_base62('aWgEPTl1tmebfsQzFP4bxwgy80V')
 #
@@ -181,7 +184,6 @@ module KSUID
   # Instantiates a new KSUID
   #
   # @api public
-  # @since 0.5.0
   #
   # @example Generate a new KSUID for the current second
   #   KSUID.new
@@ -218,6 +220,7 @@ module KSUID
   # Generates a KSUID string
   #
   # @api public
+  # @since 0.5.0
   #
   # @example Generate a new KSUID string for the current second
   #   KSUID.string

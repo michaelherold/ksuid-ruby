@@ -17,10 +17,11 @@ default = %w[spec]
 
 with_optional_dependency do
   require 'yard-doctest'
+  desc 'Run tests on the examples in documentation strings'
   task 'yard:doctest' do
     command = String.new('yard doctest')
     env = {}
-    if (gemfile = ENV['BUNDLE_GEMFILE'])
+    if (gemfile = ENV.fetch('BUNDLE_GEMFILE', nil))
       env['BUNDLE_GEMFILE'] = gemfile
     elsif !ENV['APPRAISAL_INITIALIZED']
       command.prepend('appraisal rails-6.0 ')
@@ -71,12 +72,14 @@ with_optional_dependency do
 end
 
 if ENV['CI']
-  task default: default
+  # no-op
 elsif !ENV['APPRAISAL_INITIALIZED']
   require 'appraisal/task'
   Appraisal::Task.new
-  task default: default - %w[spec yard:doctest] + %w[appraisal]
+  default -= %w[spec yard:doctest] + %w[appraisal]
 else
   ENV['COVERAGE'] = '1'
-  task default: default & %w[spec yard:doctest]
+  default &= %w[spec yard:doctest]
 end
+
+task default: default

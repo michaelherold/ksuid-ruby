@@ -30,6 +30,8 @@ group :development do
 
   group :linting do
     gem 'inch'
-    gem 'rubocop', '0.92.0'
+    gem 'rubocop', '1.35.0'
+    gem 'rubocop-rake'
+    gem 'rubocop-rspec'
   end
 end

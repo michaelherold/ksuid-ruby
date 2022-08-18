@@ -61,7 +61,7 @@ module KSUID
 
       bytes
         .map { |byte| byte.to_s(2).rjust(8, '0') }
-        .join('')
+        .join
         .to_i(2)
     end
 

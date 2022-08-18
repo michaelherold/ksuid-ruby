@@ -87,8 +87,11 @@ module KSUID
     def assert_payload_size(generator)
       return if (length = generator.call.length) == (expected_length = BYTES[:payload])
 
-      raise ConfigurationError, 'Random generator generates the wrong number of bytes ' \
+      raise(
+        ConfigurationError,
+        'Random generator generates the wrong number of bytes ' \
         "(#{length} generated, #{expected_length} expected)"
+      )
     end
   end
 end

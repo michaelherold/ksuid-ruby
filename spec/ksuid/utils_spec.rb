@@ -3,19 +3,19 @@
 RSpec.describe KSUID::Utils do
   it 'can convert between integers and bytes losslessly' do
     number = 123_456_789
-    bytes = KSUID::Utils.int_to_bytes(number)
-    converted_number = KSUID::Utils.int_from_bytes(bytes)
+    bytes = described_class.int_to_bytes(number)
+    converted_number = described_class.int_from_bytes(bytes)
 
     expect(converted_number).to eq(number)
   end
 
   describe '#byte_string_from_hex' do
-    it 'converts a hex string to an integer' do
+    it 'converts a hex string to an integer', :aggregate_failures do
       hex = '0DE978D96CA064CB84C244311C261F49DB083AA8'
 
-      result = KSUID::Utils.byte_string_from_hex(hex)
+      result = described_class.byte_string_from_hex(hex)
 
-      expect(KSUID::Utils.bytes_to_hex_string(result)).to eq hex
+      expect(described_class.bytes_to_hex_string(result)).to eq hex
       expect(KSUID.call(result)).to eq KSUID.call('1z4PxXDcFiwInVMCTC3MvcbGptw')
     end
   end
@@ -25,7 +25,7 @@ RSpec.describe KSUID::Utils do
       number_from_binary = ('1' * 32).to_i(2)
       byte_string = "\xFF" * 4
 
-      converted_number = KSUID::Utils.int_from_bytes(byte_string)
+      converted_number = described_class.int_from_bytes(byte_string)
 
       expect(converted_number).to eq(number_from_binary)
     end
@@ -34,7 +34,7 @@ RSpec.describe KSUID::Utils do
       number_from_binary = ('1' * 32).to_i(2)
       byte_array = [255] * 4
 
-      converted_number = KSUID::Utils.int_from_bytes(byte_array)
+      converted_number = described_class.int_from_bytes(byte_array)
 
       expect(converted_number).to eq(number_from_binary)
     end
@@ -42,7 +42,7 @@ RSpec.describe KSUID::Utils do
     it 'handles the maximum ksuid' do
       expected = 1_461_501_637_330_902_918_203_684_832_716_283_019_655_932_542_975
 
-      converted = KSUID::Utils.int_from_bytes([255] * 20)
+      converted = described_class.int_from_bytes([255] * 20)
 
       expect(converted).to eq(expected)
     end
@@ -53,7 +53,7 @@ RSpec.describe KSUID::Utils do
       number_from_binary = ('1' * 32).to_i(2)
       expected = ("\xFF" * 4).bytes
 
-      converted_bytes = KSUID::Utils.int_to_bytes(number_from_binary).bytes
+      converted_bytes = described_class.int_to_bytes(number_from_binary).bytes
 
       expect(converted_bytes).to eq(expected)
     end

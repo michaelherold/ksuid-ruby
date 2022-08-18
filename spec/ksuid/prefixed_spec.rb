@@ -30,7 +30,7 @@ RSpec.describe KSUID::Prefixed do
     it 'prefixes KSUIDs' do
       ksuid = KSUID.new
 
-      result = KSUID::Prefixed.call(ksuid, prefix: 'evt_')
+      result = described_class.call(ksuid, prefix: 'evt_')
 
       expect(result.to_s).to eq("evt_#{ksuid}")
     end
@@ -38,33 +38,33 @@ RSpec.describe KSUID::Prefixed do
     it 'raises for byte strings' do
       ksuid = KSUID.prefixed('evt_')
 
-      expect { KSUID::Prefixed.call(ksuid.to_bytes, prefix: 'evt_') }
+      expect { described_class.call(ksuid.to_bytes, prefix: 'evt_') }
         .to raise_error(ArgumentError)
     end
 
     it 'raises for byte arrays' do
       ksuid = KSUID.prefixed('evt_')
 
-      expect { KSUID::Prefixed.call(ksuid.__send__(:uid), prefix: 'evt_') }
+      expect { described_class.call(ksuid.__send__(:uid), prefix: 'evt_') }
         .to raise_error(ArgumentError)
     end
 
     it 'converts base 62 strings to KSUIDs' do
       ksuid = KSUID.new
 
-      result = KSUID::Prefixed.call(ksuid.to_s, prefix: 'cus_')
+      result = described_class.call(ksuid.to_s, prefix: 'cus_')
 
       expect(result.to_s).to eq("cus_#{ksuid}")
     end
 
     it 'returns nil if passed nil' do
-      result = KSUID::Prefixed.call(nil, prefix: 'evt_')
+      result = described_class.call(nil, prefix: 'evt_')
 
       expect(result).to be_nil
     end
 
     it 'raise an ArgumentError upon an unknown value' do
-      expect { KSUID::Prefixed.call(1, prefix: 'evt_') }
+      expect { described_class.call(1, prefix: 'evt_') }
         .to raise_error(ArgumentError)
     end
   end
@@ -105,10 +105,10 @@ RSpec.describe KSUID::Prefixed do
       expect(ksuid1).not_to eq(ksuid2)
     end
 
-    it 'checks the prefix as well as the uid' do
+    it 'checks the prefix as well as the uid', :aggregate_failures do
       ksuid1 = KSUID.prefixed('evt_', time: Time.parse('2022-08-16 11:00:00 UTC'))
-      ksuid2 = KSUID::Prefixed.call(ksuid1, prefix: 'evt_')
-      ksuid3 = KSUID::Prefixed.call(ksuid1, prefix: 'cus_')
+      ksuid2 = described_class.call(ksuid1, prefix: 'evt_')
+      ksuid3 = described_class.call(ksuid1, prefix: 'cus_')
 
       expect(ksuid1).to eq(ksuid2)
       expect(ksuid1).not_to eq(ksuid3)
@@ -117,7 +117,7 @@ RSpec.describe KSUID::Prefixed do
 
   describe '#raw' do
     it 'prefixes the original KSUID payload' do
-      ksuid = KSUID::Prefixed.from_base62('evt_0vdbMgWkU6slGpLVCqEFwkkZvuW', prefix: 'evt_')
+      ksuid = described_class.from_base62('evt_0vdbMgWkU6slGpLVCqEFwkkZvuW', prefix: 'evt_')
 
       expect(ksuid.raw).to eq('evt_0683F789049CC215C099D42B784DBE99341BD79C')
     end

@@ -11,7 +11,7 @@ module KSUID
     # Builds a module to include into the model
     #
     # @api public
-    # @deprecated Use {ActiveRecord::KSUID.[]} instead.
+    # @deprecated Use {::ActiveRecord::KSUID.[]} instead.
     #
     # @example Add a `#ksuid` attribute to a model
     #   class Event < ActiveRecord::Base
@@ -23,17 +23,15 @@ module KSUID
     #     include KSUID::ActiveRecord[:remote_id, created_at: true]
     #   end
     #
-    # @param field [String, Symbol] the name of the field to use as a KSUID
-    # @param created_at [Boolean] whether to override the `#created_at` method
-    # @param binary [Boolean] whether to store the KSUID as a binary or a string
-    # @return [Module] the module to include into the model
-    def self.[](field, created_at: false, binary: false)
+    # @param (see ::ActiveRecord::KSUID.[])
+    # @return  (see ::ActiveRecord::KSUID.[])
+    def self.[](field, created_at: false, binary: false, prefix: nil)
       ActiveSupport::Deprecation.instance.warn(
         'KSUID::ActiveRecord is deprecated! Use ActiveRecord::KSUID instead.',
         caller_locations
       )
 
-      ::ActiveRecord::KSUID[field, created_at: created_at, binary: binary]
+      ::ActiveRecord::KSUID[field, created_at: created_at, binary: binary, prefix: prefix]
     end
   end
 end
