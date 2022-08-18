@@ -71,7 +71,7 @@ RSpec.describe KSUID do
     it 'accepts a payload and a time' do
       string = described_class.string(
         payload: ("\xFF" * KSUID::BYTES[:payload]),
-        time: Time.new(2150, 6, 19, 23, 21, 35, 'UTC')
+        time: Time.new(2150, 6, 19, 23, 21, 35, '+00:00')
       )
 
       expect(string).to eq KSUID::MAX_STRING_ENCODED
