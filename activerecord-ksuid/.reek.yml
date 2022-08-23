@@ -1,0 +1,20 @@
+---
+detectors:
+  BooleanParameter:
+    exclude:
+      - "ActiveRecord::KSUID#self.[]"
+
+  ControlParameter:
+    exclude:
+      - "ActiveRecord::KSUID#self.[]"
+      - "ActiveRecord::KSUID#self.define_attribute"
+
+  UtilityFunction:
+    exclude:
+      - "ActiveRecord::KSUID::BinaryType"
+      - "ActiveRecord::KSUID::Type"
+
+exclude_paths:
+  - benchmark/
+
+# vim: ft=yaml

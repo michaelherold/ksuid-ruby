@@ -7,10 +7,11 @@ AllCops:
     - "Gemfile"
     - "Guardfile"
     - "Rakefile"
-    - "*.gemspec"
-    - "lib/**/*.rb"
-    - "spec/**/*.rb"
+    - "**/*.gemspec"
+    - "**/lib/**/*.rb"
+    - "**/spec/**/*.rb"
   Exclude:
+    - "*.gemfile"
     - "vendor/bundle/**/*"
     - "tmp/**/*"
   NewCops: enable
@@ -25,21 +26,23 @@ Layout/LineLength:
 Metrics/AbcSize:
   Exclude:
     - "Rakefile"
-    - "spec/**/*_spec.rb"
+    - "**/spec/**/*_spec.rb"
 
 Metrics/BlockLength:
   Exclude:
     - "Rakefile"
-    - "spec/**/*_spec.rb"
+    - "**/spec/**/*_spec.rb"
 
 Metrics/MethodLength:
   Exclude:
     - "Rakefile"
-    - "spec/**/*_spec.rb"
+    - "**/spec/**/*_spec.rb"
 
 Naming/FileName:
   Exclude:
-    - "Appraisals"
+    - "**/Guardfile"
+    - "**/Rakefile"
+    - "activerecord-ksuid/lib/activerecord-ksuid.rb"
 
 RSpec/DescribeClass:
   IgnoredMetadata:

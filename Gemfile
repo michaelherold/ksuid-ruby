@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
-gemspec
+gem 'ksuid', path: File.expand_path('./ksuid', __dir__)
 
 group :development do
   gem 'benchmark-ips'
