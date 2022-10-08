@@ -1,0 +1,2 @@
+activerecord-ksuid/lib/**/*.rb
+ksuid/lib/**/*.rb

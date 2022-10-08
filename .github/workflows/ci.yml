@@ -1,4 +1,4 @@
-name: Continuous integration
+name: CI
 
 on:
   push:
@@ -9,7 +9,41 @@ on:
       - "*"
 
 jobs:
-  test:
+  test-ksuid:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby:
+          - "2.7"
+          - "3.0"
+          - "3.1"
+          - jruby-9.3
+    name: Test ksuid on Ruby ${{ matrix.ruby }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+      - uses: actions/cache@v2
+        with:
+          path: ksuid/vendor/bundle
+          key: ${{ runner.os }}-gems-${{ matrix.ruby }}-${{ hashFiles('Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-${{ matrix.ruby }}-
+      - name: Run test suite
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        run: |
+          cd ./ksuid
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          chmod +x ./cc-test-reporter
+          gem install bundler
+          bundle config path vendor/bundle
+          bundle check || bundle install --jobs 4 --retry 3
+          ./cc-test-reporter before-build
+          bundle exec rake spec
+          ./cc-test-reporter after-build --exit-code $?
+  test-activerecord-ksuid:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -29,7 +63,7 @@ jobs:
             rails: "6.0"
           - ruby: jruby-9.3
             rails: "7.0"
-    name: Test Ruby ${{ matrix.ruby }} and Rails ${{ matrix.rails }}
+    name: Test activerecord-ksuid on Ruby ${{ matrix.ruby }} and Rails ${{ matrix.rails }}
     steps:
       - uses: actions/checkout@v2
       - uses: ruby/setup-ruby@v1
@@ -37,7 +71,7 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
       - uses: actions/cache@v2
         with:
-          path: vendor/bundle
+          path: activerecord-ksuid/vendor/bundle
           key: ${{ runner.os }}-gems-${{ matrix.ruby }}-${{ matrix.rails }}-${{ hashFiles('Gemfile.lock', 'gemfiles/**.gemfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-gems-${{ matrix.ruby }}-${{ matrix.rails }}-
@@ -46,6 +80,7 @@ jobs:
           BUNDLE_GEMFILE: gemfiles/rails_${{ matrix.rails }}.gemfile
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         run: |
+          cd ./activerecord-ksuid
           curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
           chmod +x ./cc-test-reporter
           gem install bundler
@@ -54,3 +89,4 @@ jobs:
           ./cc-test-reporter before-build
           bundle exec rake spec
           ./cc-test-reporter after-build --exit-code $?
+

@@ -1,0 +1,18 @@
+---
+detectors:
+  ManualDispatch:
+    exclude:
+      - "KSUID::Configuration#assert_generator_is_callable"
+
+  UncommunicativeModuleName:
+    exclude:
+      - "KSUID::Base62"
+
+  UncommunicativeMethodName:
+    exclude:
+      - "KSUID#self.from_base62"
+
+exclude_paths:
+  - benchmark/
+
+# vim: ft=yaml
