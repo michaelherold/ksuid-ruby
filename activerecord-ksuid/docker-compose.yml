@@ -1,0 +1,30 @@
+---
+version: "3"
+
+services:
+  mysql:
+    image: mysql:latest
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_DATABASE=activerecord-ksuid_test
+      - MYSQL_ROOT_PASSWORD=
+    healthcheck:
+      test: mysqladmin ping
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    ports:
+      - "3306:3306"
+
+  postgres:
+    image: postgres:latest
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_DB=activerecord-ksuid_test
+    healthcheck:
+      test: pg_isready -d activerecord-ksuid_test -h 127.0.0.1 -U postgres
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5432:5432"

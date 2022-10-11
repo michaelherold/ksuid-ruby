@@ -43,8 +43,27 @@ jobs:
           ./cc-test-reporter before-build
           bundle exec rake spec
           ./cc-test-reporter after-build --exit-code $?
-  test-activerecord-ksuid:
+
+  test-activerecord-ksuid-mysql:
     runs-on: ubuntu-latest
+    env:
+      DB_HOST: 127.0.0.1
+      DB_USERNAME: root
+      DRIVER: mysql2
+    services:
+      mysql:
+        image: mysql:latest
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: activerecord-ksuid_test
+          MYSQL_ROOT_PASSWORD: ""
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+        ports:
+          - 3306:3306
     strategy:
       matrix:
         ruby:
@@ -63,7 +82,7 @@ jobs:
             rails: "6.0"
           - ruby: jruby-9.3
             rails: "7.0"
-    name: Test activerecord-ksuid on Ruby ${{ matrix.ruby }} and Rails ${{ matrix.rails }}
+    name: Test activerecord-ksuid on Ruby ${{ matrix.ruby }}, Rails ${{ matrix.rails }}, and MySQL
     steps:
       - uses: actions/checkout@v2
       - uses: ruby/setup-ruby@v1
@@ -72,7 +91,7 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: activerecord-ksuid/vendor/bundle
-          key: ${{ runner.os }}-gems-${{ matrix.ruby }}-${{ matrix.rails }}-${{ hashFiles('Gemfile.lock', 'gemfiles/**.gemfile.lock') }}
+          key: ${{ runner.os }}-gems-${{ matrix.ruby }}-${{ matrix.rails }}-${{ hashFiles('Gemfile.lock', 'activerecord-ksuid/gemfiles/*.gemfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-gems-${{ matrix.ruby }}-${{ matrix.rails }}-
       - name: Run test suite
@@ -87,6 +106,119 @@ jobs:
           bundle config path vendor/bundle
           bundle check || bundle install --jobs 4 --retry 3
           ./cc-test-reporter before-build
-          bundle exec rake spec
+          bundle exec rspec
           ./cc-test-reporter after-build --exit-code $?
 
+  test-activerecord-ksuid-postgresql:
+    runs-on: ubuntu-latest
+    env:
+      DB_HOST: 127.0.0.1
+      DB_USERNAME: postgres
+      DRIVER: postgresql
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: activerecord-ksuid_test
+          POSTGRES_HOST_AUTH_METHOD: trust
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    strategy:
+      matrix:
+        ruby:
+          - "2.7"
+          - "3.0"
+          - "3.1"
+          - jruby-9.3
+        rails:
+          - "6.0"
+          - "6.1"
+          - "7.0"
+        exclude:
+          - ruby: "3.0"
+            rails: "6.0"
+          - ruby: "3.1"
+            rails: "6.0"
+          - ruby: jruby-9.3
+            rails: "7.0"
+    name: Test activerecord-ksuid on Ruby ${{ matrix.ruby }}, Rails ${{ matrix.rails }}, and PostgreSQL
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+      - uses: actions/cache@v2
+        with:
+          path: activerecord-ksuid/vendor/bundle
+          key: ${{ runner.os }}-gems-${{ matrix.ruby }}-${{ matrix.rails }}-${{ hashFiles('Gemfile.lock', 'activerecord-ksuid/gemfiles/*.gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-${{ matrix.ruby }}-${{ matrix.rails }}-
+      - name: Run test suite
+        env:
+          BUNDLE_GEMFILE: gemfiles/rails_${{ matrix.rails }}.gemfile
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        run: |
+          cd ./activerecord-ksuid
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          chmod +x ./cc-test-reporter
+          gem install bundler
+          bundle config path vendor/bundle
+          bundle check || bundle install --jobs 4 --retry 3
+          ./cc-test-reporter before-build
+          bundle exec rspec
+          ./cc-test-reporter after-build --exit-code $?
+
+  test-activerecord-ksuid-sqlite:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE: ":memory:"
+      DRIVER: sqlite3
+    strategy:
+      matrix:
+        ruby:
+          - "2.7"
+          - "3.0"
+          - "3.1"
+          - jruby-9.3
+        rails:
+          - "6.0"
+          - "6.1"
+          - "7.0"
+        exclude:
+          - ruby: "3.0"
+            rails: "6.0"
+          - ruby: "3.1"
+            rails: "6.0"
+          - ruby: jruby-9.3
+            rails: "7.0"
+    name: Test activerecord-ksuid on Ruby ${{ matrix.ruby }}, Rails ${{ matrix.rails }}, and SQLite
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+      - uses: actions/cache@v2
+        with:
+          path: activerecord-ksuid/vendor/bundle
+          key: ${{ runner.os }}-gems-${{ matrix.ruby }}-${{ matrix.rails }}-${{ hashFiles('Gemfile.lock', 'activerecord-ksuid/gemfiles/*.gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-${{ matrix.ruby }}-${{ matrix.rails }}-
+      - name: Run test suite
+        env:
+          BUNDLE_GEMFILE: gemfiles/rails_${{ matrix.rails }}.gemfile
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        run: |
+          cd ./activerecord-ksuid
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          chmod +x ./cc-test-reporter
+          gem install bundler
+          bundle config path vendor/bundle
+          bundle check || bundle install --jobs 4 --retry 3
+          ./cc-test-reporter before-build
+          bundle exec rspec
+          ./cc-test-reporter after-build --exit-code $?

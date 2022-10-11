@@ -3,9 +3,7 @@
 source "https://rubygems.org"
 
 gem "ksuid", path: "../../ksuid"
-gem "activerecord-jdbcsqlite3-adapter", "~> 61", platforms: [:jruby]
 gem "rails", "~> 6.1.0"
-gem "sqlite3", "~> 1.4", platforms: [:mri, :mingw, :x64_mingw]
 
 group :development do
   gem "benchmark-ips"
@@ -35,6 +33,18 @@ group :development do
     gem "rubocop-rake"
     gem "rubocop-rspec"
   end
+end
+
+platforms :jruby do
+  gem "activerecord-jdbcmysql-adapter", "~> 61"
+  gem "activerecord-jdbcpostgresql-adapter", "~> 61"
+  gem "activerecord-jdbcsqlite3-adapter", "~> 61"
+end
+
+platforms :mri, :mingw, :x64_mingw do
+  gem "mysql2", "~> 0.5"
+  gem "pg", "~> 1.1"
+  gem "sqlite3", "~> 1.4"
 end
 
 gemspec path: "../"

@@ -10,10 +10,93 @@ def with_optional_dependency
 rescue LoadError # rubocop:disable Lint/SuppressedException
 end
 
-require 'rspec/core/rake_task'
-RSpec::Core::RakeTask.new(:spec)
+default = %w[spec:sqlite]
 
-default = %w[spec]
+namespace :db do
+  desc 'Reset all databases'
+  task reset: %i[mysql:reset postgresql:reset]
+
+  namespace :mysql do
+    desc 'Reset MySQL database'
+    task reset: %i[drop create]
+
+    desc 'Create MySQL database'
+    task :create do
+      sh %(mysql -u root -e 'CREATE DATABASE `activerecord-ksuid_test`;')
+    end
+
+    desc 'Drops MySQL database'
+    task :drop do
+      sh %(mysql -u root -e 'DROP DATABASE IF EXISTS `activerecord-ksuid_test`;')
+    end
+  end
+
+  namespace :postgresql do
+    desc 'Reset PostgreSQL database'
+    task reset: %i[drop create]
+
+    desc 'Create PostgreSQL database'
+    task :create do
+      sh 'createdb -U postgres activerecord-ksuid_test'
+    end
+
+    desc 'Drops PostgreSQL database'
+    task :drop do
+      sh %(psql -d postgres -U postgres -c 'DROP DATABASE IF EXISTS "activerecord-ksuid_test"')
+    end
+  end
+end
+
+task spec: %i[spec:all]
+
+if ENV['APPRAISAL_INITIALIZED']
+  require 'rspec/core/rake_task'
+
+  namespace :spec do
+    task all: %i[mysql postgresql sqlite]
+
+    task :mysql do
+      sh 'DRIVER=mysql DB_HOST=127.0.0.1 DB_USERNAME=root bundle exec rspec'
+    end
+
+    task :postgresql do
+      sh 'DRIVER=postgresql DB_HOST=127.0.0.1 DB_USERNAME=postgres bundle exec rspec'
+    end
+
+    task :sqlite do
+      sh 'DRIVER=sqlite3 DATABASE=":memory:" bundle exec rspec'
+    end
+  end
+else
+  namespace :spec do
+    task all: %i[mysql postgresql sqlite]
+
+    task :mysql do
+      run_rspec_with_driver('mysql', { 'DB_HOST' => '127.0.0.1', 'DB_USERNAME' => 'root' })
+    end
+
+    task :postgresql do
+      run_rspec_with_driver('postgresql', { 'DB_HOST' => '127.0.0.1', 'DB_USERNAME' => 'postgres' })
+    end
+
+    task :sqlite do
+      run_rspec_with_driver('sqlite3', { 'DATABASE' => ':memory:' })
+    end
+
+    def run_rspec_with_driver(driver, env = {})
+      command = String.new('rspec')
+      env['DRIVER'] = driver
+      if (gemfile = ENV['BUNDLE_GEMFILE']) && gemfile.match?(%r{gemfiles/}) # rubocop:disable Style/FetchEnvVar
+        env['BUNDLE_GEMFILE'] = gemfile
+      else
+        command.prepend('appraisal rails-7.0 ')
+      end
+      success = system(env, command)
+
+      abort "\nRSpec failed: #{$CHILD_STATUS}" unless success
+    end
+  end
+end
 
 with_optional_dependency do
   require 'yard-doctest'
@@ -24,7 +107,7 @@ with_optional_dependency do
     if (gemfile = ENV.fetch('BUNDLE_GEMFILE', nil))
       env['BUNDLE_GEMFILE'] = gemfile
     elsif !ENV['APPRAISAL_INITIALIZED']
-      command.prepend('appraisal rails-6.0 ')
+      command.prepend('appraisal rails-7.0 ')
     end
     success = system(env, command)
 
@@ -72,14 +155,12 @@ with_optional_dependency do
 end
 
 if ENV['CI']
-  # no-op
+  task default: default
 elsif !ENV['APPRAISAL_INITIALIZED']
   require 'appraisal/task'
   Appraisal::Task.new
-  default -= %w[spec yard:doctest] + %w[appraisal]
+  task default: default - %w[spec yard:doctest] + %w[appraisal]
 else
   ENV['COVERAGE'] = '1'
-  default &= %w[spec yard:doctest]
+  task default: default & %w[spec yard:doctest]
 end
-
-task default: default
