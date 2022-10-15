@@ -56,7 +56,8 @@ if ENV['APPRAISAL_INITIALIZED']
     task all: %i[mysql postgresql sqlite]
 
     task :mysql do
-      sh 'DRIVER=mysql DB_HOST=127.0.0.1 DB_USERNAME=root bundle exec rspec'
+      driver = defined?(JRUBY_VERSION) ? 'mysql' : 'mysql2'
+      sh "DRIVER=#{driver} DB_HOST=127.0.0.1 DB_USERNAME=root bundle exec rspec"
     end
 
     task :postgresql do
@@ -72,7 +73,8 @@ else
     task all: %i[mysql postgresql sqlite]
 
     task :mysql do
-      run_rspec_with_driver('mysql', { 'DB_HOST' => '127.0.0.1', 'DB_USERNAME' => 'root' })
+      driver = defined?(JRUBY_VERSION) ? 'mysql' : 'mysql2'
+      run_rspec_with_driver(driver, { 'DB_HOST' => '127.0.0.1', 'DB_USERNAME' => 'root' })
     end
 
     task :postgresql do
