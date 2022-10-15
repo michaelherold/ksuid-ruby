@@ -20,11 +20,11 @@ jobs:
           - jruby-9.3
     name: Test ksuid on Ruby ${{ matrix.ruby }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: ksuid/vendor/bundle
           key: ${{ runner.os }}-gems-${{ matrix.ruby }}-${{ hashFiles('Gemfile.lock') }}
@@ -84,11 +84,11 @@ jobs:
             rails: "7.0"
     name: Test activerecord-ksuid on Ruby ${{ matrix.ruby }}, Rails ${{ matrix.rails }}, and MySQL
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: activerecord-ksuid/vendor/bundle
           key: ${{ runner.os }}-gems-${{ matrix.ruby }}-${{ matrix.rails }}-${{ hashFiles('Gemfile.lock', 'activerecord-ksuid/gemfiles/*.gemfile.lock') }}
@@ -148,11 +148,11 @@ jobs:
             rails: "7.0"
     name: Test activerecord-ksuid on Ruby ${{ matrix.ruby }}, Rails ${{ matrix.rails }}, and PostgreSQL
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: activerecord-ksuid/vendor/bundle
           key: ${{ runner.os }}-gems-${{ matrix.ruby }}-${{ matrix.rails }}-${{ hashFiles('Gemfile.lock', 'activerecord-ksuid/gemfiles/*.gemfile.lock') }}
@@ -198,11 +198,11 @@ jobs:
             rails: "7.0"
     name: Test activerecord-ksuid on Ruby ${{ matrix.ruby }}, Rails ${{ matrix.rails }}, and SQLite
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: activerecord-ksuid/vendor/bundle
           key: ${{ runner.os }}-gems-${{ matrix.ruby }}-${{ matrix.rails }}-${{ hashFiles('Gemfile.lock', 'activerecord-ksuid/gemfiles/*.gemfile.lock') }}
