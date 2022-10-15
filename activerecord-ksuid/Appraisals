@@ -2,25 +2,53 @@
 
 appraise 'rails-6.0' do
   gemspec
-  gem 'activerecord-jdbcsqlite3-adapter', '~> 60', platforms: %i[jruby]
+
   gem 'ksuid', path: '../ksuid'
   gem 'rails', '~> 6.0.0'
-  gem 'sqlite3', '~> 1.4', platforms: %i[mri mingw x64_mingw]
+
+  platforms :jruby do
+    gem 'activerecord-jdbcmysql-adapter', '~> 60'
+    gem 'activerecord-jdbcpostgresql-adapter', '~> 60'
+    gem 'activerecord-jdbcsqlite3-adapter', '~> 60'
+  end
+
+  platforms :mri, :mingw, :x64_mingw do
+    gem 'mysql2', '>= 0.4.4'
+    gem 'pg', '>= 0.18', '< 2.0'
+    gem 'sqlite3', '~> 1.4'
+  end
 end
 
 appraise 'rails-6.1' do
   gemspec
-  gem 'activerecord-jdbcsqlite3-adapter', '~> 61', platforms: %i[jruby]
+
   gem 'ksuid', path: '../ksuid'
   gem 'rails', '~> 6.1.0'
-  gem 'sqlite3', '~> 1.4', platforms: %i[mri mingw x64_mingw]
+
+  platforms :jruby do
+    gem 'activerecord-jdbcmysql-adapter', '~> 61'
+    gem 'activerecord-jdbcpostgresql-adapter', '~> 61'
+    gem 'activerecord-jdbcsqlite3-adapter', '~> 61'
+  end
+
+  platforms :mri, :mingw, :x64_mingw do
+    gem 'mysql2', '~> 0.5'
+    gem 'pg', '~> 1.1'
+    gem 'sqlite3', '~> 1.4'
+  end
 end
 
 unless RUBY_ENGINE == 'jruby'
   appraise 'rails-7.0' do
     gemspec
+
     gem 'ksuid', path: '../ksuid'
     gem 'rails', '~> 7.0.0'
-    gem 'sqlite3', '~> 1.4', platforms: %i[mri mingw x64_mingw]
+
+    platforms :mri, :mingw, :x64_mingw do
+      gem 'mysql2', '~> 0.5'
+      gem 'pg', '~> 1.1'
+      gem 'sqlite3', '~> 1.4'
+    end
   end
 end

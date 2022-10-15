@@ -16,12 +16,18 @@ end
 
 require 'active_record/ksuid/railtie'
 
-ActiveRecord::KSUID::Railtie.initializers.each(&:run)
-ActiveSupport.run_load_hooks(:active_record, ActiveRecord::Base)
-
-ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: ':memory:')
+ActiveRecord::Base.establish_connection(
+  adapter: ENV.fetch('DRIVER'),
+  host: ENV['DB_HOST'], # rubocop:disable Style/FetchEnvVar
+  username: ENV['DB_USERNAME'], # rubocop:disable Style/FetchEnvVar
+  database: ENV.fetch('DATABASE', 'activerecord-ksuid_test')
+)
 ActiveRecord::Base.logger = Logger.new(IO::NULL)
 ActiveRecord::Schema.verbose = false
+
+# Bootstrap the railtie without booting a Rails app
+ActiveRecord::KSUID::Railtie.initializers.each(&:run)
+ActiveSupport.run_load_hooks(:active_record, ActiveRecord::Base)
 
 ActiveRecord::Schema.define do
   create_table :events, force: true do |t|
@@ -37,13 +43,13 @@ ActiveRecord::Schema.define do
   end
 
   create_table :event_correlations, force: true do |t|
-    t.references :from, type: :string, limit: 27, foreign_key: { to_table: :event_primary_keys }
-    t.references :to, type: :string, limit: 27, foreign_key: { to_table: :event_primary_keys }
+    t.references :from, type: :string, limit: 27
+    t.references :to, type: :string, limit: 27
   end
 
   create_table :event_binary_correlations, force: true do |t|
-    t.references :from, type: :binary, limit: 20, foreign_key: { to_table: :event_binaries }
-    t.references :to, type: :binary, limit: 20, foreign_key: { to_table: :event_binaries }
+    t.references :from, type: :binary, limit: 20
+    t.references :to, type: :binary, limit: 20
   end
 
   create_table :event_prefixes, force: true, id: false do |t|

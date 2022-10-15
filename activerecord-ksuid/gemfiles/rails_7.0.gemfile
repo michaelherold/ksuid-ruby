@@ -4,7 +4,6 @@ source "https://rubygems.org"
 
 gem "ksuid", path: "../../ksuid"
 gem "rails", "~> 7.0.0"
-gem "sqlite3", "~> 1.4", platforms: [:mri, :mingw, :x64_mingw]
 
 group :development do
   gem "benchmark-ips"
@@ -34,6 +33,12 @@ group :development do
     gem "rubocop-rake"
     gem "rubocop-rspec"
   end
+end
+
+platforms :mri, :mingw, :x64_mingw do
+  gem "mysql2", "~> 0.5"
+  gem "pg", "~> 1.1"
+  gem "sqlite3", "~> 1.4"
 end
 
 gemspec path: "../"

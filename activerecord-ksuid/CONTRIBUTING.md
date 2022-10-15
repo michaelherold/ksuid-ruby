@@ -42,6 +42,12 @@ Ideally, a bug report should include a pull request with failing specs.
 
 ## Tools to Help You Succeed
 
+You will need a working copy of MySQL and PostgreSQL to run tests against them. At the root level of the gem, there is a `docker-compose.yml` file that sets up both of these services for you using either [Podman Compose](https://github.com/containers/podman-compose) or [Docker Compose](https://docs.docker.com/compose/). Both of these services will bind their default ports, so keep that in mind if you already have either database running on that port. Assuming you picked Podman, run:
+
+    podman-compose up
+
+in the `activerecord-ksuid` directory to start the services.
+
 After checking out the repository, run `bin/setup` to install dependencies. Then, run `appraisal rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
 Before committing code, run `appraisal rake` to check that the code conforms to the style guidelines of the project, that all of the tests are green (if you're writing a feature; if you're only submitting a failing test, then it does not have to pass!), and that the changes are sufficiently documented.

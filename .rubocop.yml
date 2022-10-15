@@ -30,7 +30,7 @@ Metrics/AbcSize:
 
 Metrics/BlockLength:
   Exclude:
-    - "Rakefile"
+    - "**/Rakefile"
     - "**/spec/**/*_spec.rb"
 
 Metrics/MethodLength:
