@@ -32,19 +32,20 @@ module ActiveRecord
     #     include ActiveRecord::KSUID[:ksuid, prefix: 'evt_']
     #   end
     #
+    # @param auto_gen [Boolean] whether to generate a KSUID upon initialization
     # @param field [String, Symbol] the name of the field to use as a KSUID
     # @param created_at [Boolean] whether to override the `#created_at` method
     # @param binary [Boolean] whether to store the KSUID as a binary or a string
     # @param prefix [String, nil] a prefix to prepend to the KSUID attribute
     # @return [Module] the module to include into the model
-    def self.[](field, created_at: false, binary: false, prefix: nil)
+    def self.[](field, auto_gen: true, created_at: false, binary: false, prefix: nil)
       raise ArgumentError, 'cannot include a prefix on a binary KSUID' if binary && prefix
 
       Module.new.tap do |mod|
         if prefix
-          define_prefixed_attribute(field, mod, prefix)
+          define_prefixed_attribute(field, mod, auto_gen, prefix)
         else
-          define_attribute(field, mod, binary)
+          define_attribute(field, mod, auto_gen, binary)
         end
         define_created_at(field, mod) if created_at
       end
@@ -56,11 +57,13 @@ module ActiveRecord
     #
     # @param field [String, Symbol] the name of the field to set as an attribute
     # @param mod [Module] the module to extend
+    # @param auto_gen [Boolean] whether to generate a KSUID upon initialization
     # @param binary [Boolean] whether to store the KSUID as a binary or a string
     # @return [void]
-    def self.define_attribute(field, mod, binary)
+    def self.define_attribute(field, mod, auto_gen, binary)
       type = 'ksuid'
       type = 'ksuid_binary' if binary
+      default = 'default: -> { ::KSUID.new }' if auto_gen
 
       mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
         def self.included(base)         # def self.included(base)
@@ -68,7 +71,7 @@ module ActiveRecord
             :attribute,                 #     :attribute,
             :#{field},                  #     :id,
             :#{type},                   #     :ksuid,
-            default: -> { ::KSUID.new } #     default: -> { ::KSUID.new }
+            #{default}                  #     default: -> { ::KSUID.new }
           )                             #   )
         end                             # end
       RUBY
@@ -81,19 +84,22 @@ module ActiveRecord
     #
     # @param field [String, Symbol] the name of the field to set as an attribute
     # @param mod [Module] the module to extend
+    # @param auto_gen [Boolean] whether to generate a KSUID upon initialization
     # @param prefix [String] the prefix to add to the KSUID
     # @return [void]
-    def self.define_prefixed_attribute(field, mod, prefix)
+    def self.define_prefixed_attribute(field, mod, auto_gen, prefix)
+      default = "default: -> { ::KSUID.prefixed('#{prefix}') }" if auto_gen
+
       mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
-        def self.included(base)                                 # def self.included(base)
-          base.__send__(                                        #   base.__send__(
-            :attribute,                                         #     :attribute,
-            :#{field},                                          #     :id,
-            :ksuid_prefixed,                                    #     :ksuid_prefixed,
-            prefix: #{prefix.inspect},                          #     prefix: 'evt_'
-            default: -> { ::KSUID.prefixed(#{prefix.inspect}) } #     default: -> { ::KSUID.prefixed('evt_') }
-          )                                                     #   )
-        end                                                     # end
+        def self.included(base)        # def self.included(base)
+          base.__send__(               #   base.__send__(
+            :attribute,                #     :attribute,
+            :#{field},                 #     :id,
+            :ksuid_prefixed,           #     :ksuid_prefixed,
+            prefix: #{prefix.inspect}, #     prefix: 'evt_'
+            #{default}                 #     default: -> { ::KSUID.prefixed('evt_') }
+          )                            #   )
+        end                            # end
       RUBY
     end
     private_class_method :define_prefixed_attribute

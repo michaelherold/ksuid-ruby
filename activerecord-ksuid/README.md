@@ -136,6 +136,28 @@ class Event < ApplicationRecord
 end
 ```
 
+##### Without generating a default value
+
+In some cases, such as foreign keys, you do not want to generate a default value for the field and, instead, want to set the value manually. When this is true, you can disable the default generation behavior by passing `auto_gen: false` to the module builder.
+
+```ruby
+class Event < ApplicationRecord
+  include ActiveRecord::KSUID[:correlation_id, auto_gen: false]
+
+  belongs_to :correlation, class_name: Event
+end
+```
+
+You can also use the [Attributes API](http://api.rubyonrails.org/classes/ActiveRecord/Attributes/ClassMethods.html) directly:
+
+```ruby
+class Event < ApplicationRecord
+  attribute :correlation_id, :ksuid
+
+  belongs_to :correlation, class_name: Event
+end
+```
+
 #### Outside of Rails
 
 Outside of Rails, you cannot rely on the Railtie to load the appropriate files for you automatically. Toward the start of your application's boot process, you will want to require the following:

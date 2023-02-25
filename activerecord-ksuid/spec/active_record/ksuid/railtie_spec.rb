@@ -74,8 +74,8 @@ end
 
 # A demonstration of a relation to a string KSUID primary key
 class EventCorrelation < ActiveRecord::Base
-  include ActiveRecord::KSUID[:from_id]
-  include ActiveRecord::KSUID[:to_id]
+  include ActiveRecord::KSUID[:from_id, auto_gen: false]
+  include ActiveRecord::KSUID[:to_id, auto_gen: false]
 
   belongs_to :from, class_name: 'EventPrimaryKey'
   belongs_to :to, class_name: 'EventPrimaryKey'
@@ -83,8 +83,8 @@ end
 
 # A demonstration of a relation to a binary KSUID primary key
 class EventBinaryCorrelation < ActiveRecord::Base
-  include ActiveRecord::KSUID[:from_id, binary: true]
-  include ActiveRecord::KSUID[:to_id, binary: true]
+  include ActiveRecord::KSUID[:from_id, auto_gen: false, binary: true]
+  include ActiveRecord::KSUID[:to_id, auto_gen: false, binary: true]
 
   belongs_to :from, class_name: 'EventBinary'
   belongs_to :to, class_name: 'EventBinary'
@@ -210,6 +210,13 @@ RSpec.describe 'ActiveRecord integration', type: :integration do
           .includes(:from, :to)
           .map { |correlation| "#{correlation.from.id} #{correlation.to.id}" }
       end.to issue_sql_queries(3)
+    end
+
+    it 'does not initialize fields marked with auto_gen: false', :aggregate_failures do
+      event = EventCorrelation.new
+
+      expect(event.from_id).to be_nil
+      expect(event.to_id).to be_nil
     end
   end
 
