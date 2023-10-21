@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased](https://github.com/michaelherold/ksuid-ruby/compare/v1.0.0...main)
+
+### Fixed
+
+- Using a `ksuid` or `ksuid_binary` type with `add_column` in migrations will now work correctly without throwing an error about an unknown column type.
+
 ## [1.0.0](https://github.com/michaelherold/ksuid-ruby/compare/v0.5.0...v1.0.0) - 2023-02-25
 
 ### Added

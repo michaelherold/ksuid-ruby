@@ -18,9 +18,11 @@ module ActiveRecord
         ActiveSupport.on_load :active_record do
           require 'active_record/ksuid/table_definition'
 
-          ActiveRecord::ConnectionAdapters::TableDefinition.include(
-            ActiveRecord::KSUID::TableDefinition
-          )
+          ActiveRecord::ConnectionAdapters::TableDefinition.descendants.each do |defn|
+            next unless defn.name
+
+            defn.prepend(ActiveRecord::KSUID::TableDefinition)
+          end
         end
       end
     end

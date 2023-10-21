@@ -257,6 +257,23 @@ RSpec.describe 'ActiveRecord integration', type: :integration do
     end
   end
 
+  context 'when writing a migration that adds KSUID fields' do
+    it 'can use the ksuid and ksuid_binary field types' do
+      connection = ActiveRecord::Base.connection
+
+      connection.create_table :field_tests do |t|
+        t.string :name
+      end
+
+      expect do
+        connection.add_column :field_tests, :id_one, :ksuid
+        connection.add_column :field_tests, :id_two, :ksuid_binary
+      end.not_to raise_error
+    ensure
+      connection.drop_table :field_tests, if_exists: true
+    end
+  end
+
   matcher :issue_sql_queries do |expected|
     supports_block_expectations
 
