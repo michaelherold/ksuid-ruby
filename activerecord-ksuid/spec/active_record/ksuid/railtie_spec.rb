@@ -274,6 +274,18 @@ RSpec.describe 'ActiveRecord integration', type: :integration do
     end
   end
 
+  context 'when using a generator that adds KSUID fields' do
+    require 'rails/generators'
+    require 'rails/generators/generated_attribute'
+
+    it 'can use the ksuid and ksuid_binary field types' do
+      aggregate_failures do
+        expect(Rails::Generators::GeneratedAttribute.valid_type?(:ksuid)).to be true
+        expect(Rails::Generators::GeneratedAttribute.valid_type?(:ksuid_binary)).to be true
+      end
+    end
+  end
+
   matcher :issue_sql_queries do |expected|
     supports_block_expectations
 

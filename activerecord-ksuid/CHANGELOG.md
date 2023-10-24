@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Fixed
 
 - Using a `ksuid` or `ksuid_binary` type with `add_column` in migrations will now work correctly without throwing an error about an unknown column type.
+- Using a `ksuid` or `ksuid_binary` type with `rails generate [model|resource]` will now work correctly without throwing an error about an unknown column type.
 
 ## [1.0.0](https://github.com/michaelherold/ksuid-ruby/compare/v0.5.0...v1.0.0) - 2023-02-25
 
