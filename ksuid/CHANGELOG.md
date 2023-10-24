@@ -4,13 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [1.0.0](https://github.com/michaelherold/ksuid/compare/v0.5.0...v1.0.0) - 2023-02-25
+## [1.0.0](https://github.com/michaelherold/ksuid-ruby/compare/v0.5.0...v1.0.0) - 2023-02-25
 
 ### Removed
 
 - Extracted the ActiveRecord functionality into its own gem, `activerecord-ksuid`. It is API-compatible with v0.5.0 so to restore functionality, you should only need to add the new gem to your application. See [the upgrading notice](./UPGRADING.md) for more information.
 
-## [0.5.0](https://github.com/michaelherold/ksuid/compare/v0.4.0...v0.5.0) - 2022-08-18
+## [0.5.0](https://github.com/michaelherold/ksuid-ruby/compare/v0.4.0...v0.5.0) - 2022-08-18
 
 ### Added
 
@@ -26,7 +26,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 - The compatibility check for the Base62 implementation in the gem is about 10x faster now. The original optimization did not optimize as much due to an error with the benchmark. This change has a tested benchmark that shows a great improvement. Note that this is a micro-optimization and we see no real performance gain in the parsing of KSUID strings.
 
-## [0.4.0](https://github.com/michaelherold/ksuid/compare/v0.3.0...v0.4.0) - 2022-07-29
+## [0.4.0](https://github.com/michaelherold/ksuid-ruby/compare/v0.3.0...v0.4.0) - 2022-07-29
 
 ### Added
 
@@ -37,13 +37,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - `ActiveRecord::QueryMethods#include` works as expected now due to the fix on the value object semantics of `KSUID::Type`.
 - Binary KSUID primary and foreign keys work as expected on JRuby.
 
-## [0.3.0](https://github.com/michaelherold/ksuid/compare/v0.2.0...v0.3.0) - 2021-10-07
+## [0.3.0](https://github.com/michaelherold/ksuid-ruby/compare/v0.2.0...v0.3.0) - 2021-10-07
 
 ### Added
 
 - A utility function for converting from a hexidecimal-encoded string to a byte string. This is necessary to handle the default encoding of binary fields within PostgreSQL.
 
-## [0.2.0](https://github.com/michaelherold/ksuid/compare/v0.1.0...v0.2.0) - 2020-11-11
+## [0.2.0](https://github.com/michaelherold/ksuid-ruby/compare/v0.1.0...v0.2.0) - 2020-11-11
 
 ### Added
 
@@ -54,7 +54,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 - The `KSUID::Type#inspect` method now makes it much easier to see what you're looking at in the console when you're debugging.
 
-## [0.1.0](https://github.com/michaelherold/ksuid/tree/v0.1.0) - 2017-11-05
+## [0.1.0](https://github.com/michaelherold/ksuid-ruby/tree/v0.1.0) - 2017-11-05
 
 ### Added
 
