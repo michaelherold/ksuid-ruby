@@ -78,7 +78,8 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     regexp_parser (2.6.0)
-    rexml (3.2.5)
+    rexml (3.2.8)
+      strscan (>= 3.0.9)
     rspec (3.11.0)
       rspec-core (~> 3.11.0)
       rspec-expectations (~> 3.11.0)
@@ -118,6 +119,8 @@ GEM
     sparkr (0.4.1)
     spoon (0.0.6)
       ffi
+    strscan (3.1.0)
+    strscan (3.1.0-java)
     sync (0.5.0)
     term-ansicolor (1.7.1)
       tins (~> 1.0)
